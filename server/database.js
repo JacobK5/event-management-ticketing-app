@@ -26,9 +26,8 @@ const pool = mysql.createPool({
 export async function createDatabaseIfNeeded() {
   try {
     console.log("Creating database (if it doesn't already exist)...");
-    await pool.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
+    await pool.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME};`);
     console.log(`Database '${DB_NAME}' created or already exists.`);
-    //await connection.end();
   } catch (error) {
     console.error("Error creating database:", error);
     process.exit(1);
