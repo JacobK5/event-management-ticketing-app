@@ -5,6 +5,7 @@ import pool, {
   createDatabaseIfNeeded,
   createTablesIfNeeded,
 } from "./database.js";
+import routes from "./routes/routes.js";
 
 const app = express();
 app.use(cors());
@@ -15,16 +16,7 @@ async function startServer() {
   await createDatabaseIfNeeded();
   await createTablesIfNeeded();
 
-  app.get("/api/test", async (req, res) => {
-    try {
-      const [rows] = await pool.query(
-        'SELECT "Connection Successful!" AS message'
-      );
-      res.json(rows[0]);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+  app.use("/api", routes);
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
