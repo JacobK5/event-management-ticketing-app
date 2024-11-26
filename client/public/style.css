@@ -1,0 +1,114 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #000;
+  background: url('https://media.gettyimages.com/id/1291883931/video/concert-stage-light-effect.jpg?s=640x640&k=20&c=LVZkxi2VO5_PCiy2p5wc8fVANohBjodDkSdV_V8jdUo=') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Header Navigation */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Translucent background */
+  padding: 15px 0;
+  z-index: 10;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-between; /* Space between left and right menu */
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.menu-left {
+  display: flex;
+  justify-content: space-around; /* Evenly space items */
+  flex-grow: 1;
+}
+
+.menu-right {
+  margin-left: auto; /* Push "Sign In" to the right */
+}
+
+.menu-item {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 8px 15px;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white hover */
+  color: #000;
+}
+
+.sign-in {
+  font-weight: bold;
+}
+
+/* Centered Content */
+.center-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.logo {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+}
+
+/* Search Bar */
+.search-container {
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 2px solid #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.search-bar input::placeholder {
+  color: #666;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  cursor: pointer;
+  border-radius: 0 25px 25px 0;
+  transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
