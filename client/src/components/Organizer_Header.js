@@ -1,5 +1,4 @@
 import React from "react";
-// import "../../public/drop_menu.css"; // Import the CSS file
 
 const Organizer_Header = () => {
   return (
