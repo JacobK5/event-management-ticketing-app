@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import Organizer_Header from "./components/Organizer_Header";
 import Home from "./pages/Home";
 import Organizer_Home from "./pages/Organizer_Home";
+import Create_Event from "./pages/Create_Event";
+import Create_Discount from "./pages/Create_Discount";
 // import Counter from "./pages/Example";
 
 
@@ -21,7 +23,7 @@ const App = () => {
       { isOrganizer ? (
         <>
           <Organizer_Header/>
-          <Organizer_Home/>
+          <Create_Discount/>
         </>
         
       ) : (
