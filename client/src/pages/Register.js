@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Create_Event = () => {
+const Register = () => {
   const [showInput, setShowInput] = useState(false); // State to control visibility of the input box
 
   const handleSelectChange = (event) => {
@@ -9,14 +9,31 @@ const Create_Event = () => {
   };
   return (
     <>
-      <main className="center-content">
+      <main className="register_box">
         <div>
-        <h2 class="form_title">Create Event</h2>
+        <h2 class="form_title">Create Account</h2>
         
         {/* Form to fill in user details */}
         <form class="form_box">
+       
+            <label class="input_title">
+              First Name: 
+              <input class="form-group" 
+                type="text"
+                name="fname"
+                required
+              />
+            </label>
+            <label class="input_title">
+              Last Name: 
+              <input class="form-group" 
+                type="text"
+                name="lname"
+                required
+              />
+            </label>
           <label class="input_title">
-            Event Name: 
+            Email:
             <input class="form-group"
               type="text"
               name="name"
@@ -25,7 +42,7 @@ const Create_Event = () => {
           </label>
 
           <label class="input_title">
-            Location:
+            Username:
             <input class="form-group"
               type="text"
               name="name"
@@ -34,54 +51,39 @@ const Create_Event = () => {
           </label>
 
           <label class="input_title">
-            Time:
-            <input class="timearea"
-              type="time"
-              name="time"
-              required
-            />
-            <input class="timearea"
-              type="time"
-              name="time"
+            Password:
+            <input class="form-group"
+              type="text"
+              name="name"
               required
             />
           </label>
 
           <label class="input_title">
-            Category: 
-            <select class="form-group"
-            id="category"
-            required
-            >
-              <option value="" disabled>
-                -- Select a Category --
-              </option>
-
-              <option value="" >
-                Concerts
-              </option>
-
-              <option value="" disabled>
-                Sports
-              </option>
-
-              <option value="" disabled>
-                Theatre
-              </option>
-
-              <option value="" disabled>
-                Family
-              </option>
-
-            </select>
+            Phone Number:
+            <input class="form-group"
+              type="text"
+              name="name"
+              required
+            />
           </label>
 
           <label class="input_title">
-            Type: 
+            Date of Birth:
+            <input class="form-group"
+              type="date"
+              name="date"
+              required
+            />
+          </label>
+
+          <label class="input_title">
+            Account Type: 
             <select 
             style={{
               width: "80px", // Fixed width to avoid shifting
               marginBottom:"20px",
+              marginLeft: "5px", 
               transition: "width 0.3s ease", // Smooth resize animation
             }}
             id="type"
@@ -89,14 +91,14 @@ const Create_Event = () => {
             required
             >
               <option value="" disabled>
-                -- Select a Type of Event --
+                -- Select Type of Account --
               </option>
 
               <option value="rsvp" >
-                RVSP
+                Attendee
               </option>
               <option value="ticket" >
-                Ticket
+                Organizer
               </option>
             </select>
 
@@ -105,27 +107,16 @@ const Create_Event = () => {
                 style={{
                   marginBottom:"20px",
                   marginLeft:"15px",
-                  width: "80px", // Fixed width to avoid shifting
+                  width: "120px", // Fixed width to avoid shifting
                   transition: "width 0.3s ease", // Smooth resize animation
                 }}
                 type="text"
-                placeholder="Enter Price"
+                placeholder="Enter SSN"
               />
             )}
           </label>
           
-          <label class="input_title"> 
-            Description:
-          </label>
-
-          <label class="input_title">
-            
-            <input class="textarea"
-              type="text"
-              name="desc"
-            />
-          </label>
-            {/* submit button uploads data and sends to view event page */}
+            {/*creates account and logs user in according to what account type they chose*/}
           <button class = "submit" type="submit">Submit</button> 
         </form>
       </div>
@@ -136,4 +127,4 @@ const Create_Event = () => {
   );
 };
 
-export default Create_Event;
+export default Register;

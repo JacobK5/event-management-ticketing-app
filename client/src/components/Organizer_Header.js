@@ -12,17 +12,12 @@ const Organizer_Header = () => {
           <div class="dropdown-content">
             <a href="#" class="menu-item">View Event</a>
             <a href="#">View Discount</a>
+            <a href="#">Logout</a>
           </div>
         </div>
 
       </nav>
     </header>
-  // <main class="organizer-main-center-content">
-
-  //   <a href="#" class="create">Create New Event</a>
-
-  //   <a href="#" class="create">Create Discount Code</a>
-  //   </header>
   );
 };
 
