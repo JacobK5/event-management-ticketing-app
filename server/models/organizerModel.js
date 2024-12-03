@@ -10,7 +10,7 @@ const createOrganizerTableQuery = `
 
 export async function createOrganizerTableIfNeeded() {
   try {
-    await pool.query(createOrganizerTableQuery);
+    await pool().query(createOrganizerTableQuery);
     console.log("ORGANIZER table created or already exists.");
   } catch (error) {
     console.error("Error creating ORGANIZER table:", error);

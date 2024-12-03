@@ -13,7 +13,7 @@ const createRSVPTableQuery = `
 
 export async function createRSVPTableIfNeeded() {
   try {
-    await pool.query(createRSVPTableQuery);
+    await pool().query(createRSVPTableQuery);
     console.log("RSVP table created or already exists.");
   } catch (error) {
     console.error("Error creating RSVP table:", error);

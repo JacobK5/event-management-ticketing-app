@@ -15,7 +15,7 @@ const createEventTableQuery = `
 
 export async function createEventTableIfNeeded() {
   try {
-    await pool.query(createEventTableQuery);
+    await pool().query(createEventTableQuery);
     console.log("EVENT table created or already exists.");
   } catch (error) {
     console.error("Error creating EVENT table:", error);

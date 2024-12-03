@@ -13,25 +13,46 @@ import { createResaleListingTableIfNeeded } from "./models/resaleListingModel.js
 import { createRefundTableIfNeeded } from "./models/refundModel.js";
 import { createTicketDiscountTableIfNeeded } from "./models/ticketDiscountModel.js";
 
-const pool = mysql.createPool({
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+let pool;
 
+function getPool() {
+  if (!pool) {
+    throw new Error(
+      "Connection pool has not been created. Call createDatabaseConnection first."
+    );
+  }
+  return pool;
+}
+
+// also creates the pool
 export async function createDatabaseIfNeeded() {
   try {
+    const connection = await mysql.createConnection({
+      host: DB_HOST,
+      user: DB_USER,
+      password: DB_PASSWORD,
+    });
     console.log("Creating database (if it doesn't already exist)...");
-    await pool.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME};`);
+    await connection.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME};`);
     console.log(`Database '${DB_NAME}' created or already exists.`);
+    await connection.end();
   } catch (error) {
     console.error("Error creating database:", error);
     process.exit(1);
   }
+
+  // Now create the pool after ensuring the database exists
+  pool = mysql.createPool({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  });
+
+  console.log("Connection pool created successfully.");
 }
 
 export async function createTablesIfNeeded() {
@@ -58,4 +79,4 @@ export async function createTablesIfNeeded() {
   }
 }
 
-export default pool;
+export default getPool;

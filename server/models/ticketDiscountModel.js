@@ -12,7 +12,7 @@ const createTicketDiscountTableQuery = `
 
 export async function createTicketDiscountTableIfNeeded() {
   try {
-    await pool.query(createTicketDiscountTableQuery);
+    await pool().query(createTicketDiscountTableQuery);
     console.log("TICKET_DISCOUNT table created or already exists.");
   } catch (error) {
     console.error("Error creating TICKET_DISCOUNT table:", error);

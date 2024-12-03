@@ -14,7 +14,7 @@ const createUserTableQuery = `
 
 export async function createUserTableIfNeeded() {
   try {
-    await pool.query(createUserTableQuery);
+    await pool().query(createUserTableQuery);
     console.log("USER table created or already exists.");
   } catch (error) {
     console.error("Error creating USER table:", error);

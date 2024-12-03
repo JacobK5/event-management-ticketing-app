@@ -17,7 +17,7 @@ const createTicketTableQuery = `
 
 export async function createTicketTableIfNeeded() {
   try {
-    await pool.query(createTicketTableQuery);
+    await pool().query(createTicketTableQuery);
     console.log("TICKET table created or already exists.");
   } catch (error) {
     console.error("Error creating TICKET table:", error);

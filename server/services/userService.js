@@ -5,7 +5,7 @@ class UserService {
     // Check if the user exists with the given email and password
     // (In a real system we would hash the password before comparing)
     const query = "SELECT * FROM USER WHERE Email = ? AND Password = ?";
-    const [rows] = await db.execute(query, [email, password]);
+    const [rows] = await db().execute(query, [email, password]);
     return rows.length > 0 ? rows[0] : null;
   }
 
@@ -19,39 +19,71 @@ class UserService {
     isAttendee,
     organizerSSN,
   }) {
-    // Check if a user with this email already exists
-    const checkQuery = "SELECT * FROM USER WHERE Email = ?";
-    const [existingUser] = await db.execute(checkQuery, [email]);
-    if (existingUser.length > 0) {
-      return null; // User already exists
+    const connection = await db().getConnection(); // Get a connection object
+
+    try {
+      console.log("got create user request");
+
+      // Begin transaction
+      await connection.beginTransaction();
+
+      // Check if a user with this email already exists
+      const checkQuery = "SELECT * FROM USER WHERE Email = ?";
+      const [existingUser] = await connection.execute(checkQuery, [email]);
+      if (existingUser.length > 0) {
+        throw new Error("User with this email already exists");
+      }
+
+      // Insert the new user
+      const insertUserQuery =
+        "INSERT INTO USER (Fname, Lname, Email, Password, DOB, Phone_number) VALUES (?, ?, ?, ?, ?, ?)";
+      const [result] = await connection.execute(insertUserQuery, [
+        fname,
+        lname,
+        email,
+        password,
+        dob,
+        phoneNumber,
+      ]);
+      const userId = result.insertId;
+
+      // Insert into ATTENDEE and/or ORGANIZER tables
+      if (isAttendee) {
+        const insertAttendeeQuery = "INSERT INTO ATTENDEE (UserID) VALUES (?)";
+        await connection.execute(insertAttendeeQuery, [userId]);
+      }
+
+      if (organizerSSN) {
+        const insertOrganizerQuery =
+          "INSERT INTO ORGANIZER (UserID, Organizer_SSN) VALUES (?, ?)";
+        await connection.execute(insertOrganizerQuery, [userId, organizerSSN]);
+      }
+
+      // Commit the transaction if all queries succeed
+      await connection.commit();
+
+      // Create a user object to return
+      const user = {
+        userId,
+        fname,
+        lname,
+        email,
+        dob,
+        phoneNumber,
+        isAttendee,
+        organizerSSN,
+      };
+
+      return user;
+    } catch (error) {
+      // Rollback the transaction if anything fails
+      await connection.rollback();
+      console.error("Transaction failed, rolling back:", error.message);
+      throw error;
+    } finally {
+      // Release the connection back to the pool
+      await connection.release();
     }
-
-    // Insert the new user
-    const insertUserQuery =
-      "INSERT INTO USER (Fname, Lname, Email, Password, DOB, Phone_number) VALUES (?, ?, ?, ?, ?, ?)";
-    const [result] = await db.execute(insertUserQuery, [
-      fname,
-      lname,
-      email,
-      password,
-      dob,
-      phoneNumber,
-    ]);
-    const userId = result.insertId;
-
-    // Insert into ATTENDEE and/or ORGANIZER tables
-    if (isAttendee) {
-      const insertAttendeeQuery = "INSERT INTO ATTENDEE (UserID) VALUES (?)";
-      await db.execute(insertAttendeeQuery, [userId]);
-    }
-
-    if (organizerSSN) {
-      const insertOrganizerQuery =
-        "INSERT INTO ORGANIZER (UserID, Organizer_SSN) VALUES (?, ?)";
-      await db.execute(insertOrganizerQuery, [userId, organizerSSN]);
-    }
-
-    return userId;
   }
 
   static async getUserProfile(userId) {

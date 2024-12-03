@@ -13,7 +13,7 @@ const createDiscountCodeTableQuery = `
 
 export async function createDiscountCodeTableIfNeeded() {
   try {
-    await pool.query(createDiscountCodeTableQuery);
+    await pool().query(createDiscountCodeTableQuery);
     console.log("DISCOUNT_CODE table created or already exists.");
   } catch (error) {
     console.error("Error creating DISCOUNT_CODE table:", error);
