@@ -97,7 +97,7 @@ class UserService {
       WHERE u.UserID = ?
     `;
 
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows.length > 0 ? rows[0] : null;
   }
 
@@ -109,7 +109,7 @@ class UserService {
       WHERE UserID = ?
     `;
 
-    const [result] = await db.execute(query, [
+    const [result] = await db().execute(query, [
       updates.fname,
       updates.lname,
       updates.email,
@@ -128,7 +128,7 @@ class UserService {
       SET Password = ? 
       WHERE UserID = ?
     `;
-    const [result] = await db.execute(query, [newPassword, userId]);
+    const [result] = await db().execute(query, [newPassword, userId]);
     return result.affectedRows > 0;
   }
 
@@ -141,7 +141,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE t.Holder_UserID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -154,7 +154,7 @@ class UserService {
       JOIN EVENT e ON r.Event_ID = e.EventID
       WHERE r.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -168,7 +168,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE p.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -183,7 +183,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE p.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 }

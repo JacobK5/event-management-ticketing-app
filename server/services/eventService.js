@@ -10,7 +10,7 @@ class EventService {
     tickets,
     discountCodes,
   }) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
     await connection.beginTransaction();
 
     try {
@@ -122,12 +122,12 @@ class EventService {
       params.push(maxPrice);
     }
 
-    const [events] = await db.execute(query, params);
+    const [events] = await db().execute(query, params);
     return events;
   }
 
   static async getEventDetails(eventId) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
 
     try {
       // Get event details along with organizer info
@@ -180,7 +180,7 @@ class EventService {
   }
 
   static async getAttendees(eventId) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
 
     try {
       // Get ticket holders
@@ -219,7 +219,7 @@ class EventService {
     eventId,
     { time, locationName, locationAddress, date, description, categories }
   ) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
     await connection.beginTransaction();
 
     try {
@@ -265,7 +265,7 @@ class EventService {
   }
 
   static async deleteEvent(eventId) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
     await connection.beginTransaction();
 
     try {
@@ -331,7 +331,7 @@ class EventService {
       FROM TICKET 
       WHERE Event_ID = ? AND Holder_UserID IS NULL
     `;
-    const [rows] = await db.execute(query, [eventId]);
+    const [rows] = await db().execute(query, [eventId]);
     return rows;
   }
 
@@ -344,7 +344,7 @@ class EventService {
       JOIN TICKET t ON rl.Ticket_ID = t.Ticket_ID
       WHERE t.Event_ID = ?
     `;
-    const [rows] = await db.execute(query, [eventId]);
+    const [rows] = await db().execute(query, [eventId]);
     return rows;
   }
 }
