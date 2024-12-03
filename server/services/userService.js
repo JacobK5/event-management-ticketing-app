@@ -6,7 +6,7 @@ class UserService {
     // (In a real system we would hash the password before comparing)
     const query = "SELECT * FROM USER WHERE Email = ? AND Password = ?";
     const [rows] = await db().execute(query, [email, password]);
-    return rows.length > 0 ? rows[0] : null;
+    return rows.length > 0 ? this.getUserProfile(rows[0].UserID) : null;
   }
 
   static async createUser({
@@ -62,19 +62,7 @@ class UserService {
       // Commit the transaction if all queries succeed
       await connection.commit();
 
-      // Create a user object to return
-      const user = {
-        userId,
-        fname,
-        lname,
-        email,
-        dob,
-        phoneNumber,
-        isAttendee,
-        organizerSSN,
-      };
-
-      return user;
+      return this.getUserProfile(userId);
     } catch (error) {
       // Rollback the transaction if anything fails
       await connection.rollback();
@@ -97,7 +85,7 @@ class UserService {
       WHERE u.UserID = ?
     `;
 
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows.length > 0 ? rows[0] : null;
   }
 
@@ -109,7 +97,7 @@ class UserService {
       WHERE UserID = ?
     `;
 
-    const [result] = await db.execute(query, [
+    const [result] = await db().execute(query, [
       updates.fname,
       updates.lname,
       updates.email,
@@ -128,7 +116,7 @@ class UserService {
       SET Password = ? 
       WHERE UserID = ?
     `;
-    const [result] = await db.execute(query, [newPassword, userId]);
+    const [result] = await db().execute(query, [newPassword, userId]);
     return result.affectedRows > 0;
   }
 
@@ -141,7 +129,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE t.Holder_UserID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -154,7 +142,7 @@ class UserService {
       JOIN EVENT e ON r.Event_ID = e.EventID
       WHERE r.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -168,7 +156,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE p.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 
@@ -183,7 +171,7 @@ class UserService {
       JOIN EVENT e ON t.Event_ID = e.EventID
       WHERE p.User_ID = ?
     `;
-    const [rows] = await db.execute(query, [userId]);
+    const [rows] = await db().execute(query, [userId]);
     return rows;
   }
 }

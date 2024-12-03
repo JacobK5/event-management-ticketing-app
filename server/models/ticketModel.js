@@ -6,7 +6,7 @@ const createTicketTableQuery = `
     Price DECIMAL(10, 2) NOT NULL,
     Tier VARCHAR(20),
     Details TEXT,
-    Event_ID INT,
+    Event_ID VARCHAR(100),
     Holder_UserID INT,
     Pmt_Ref_Num INT,
     FOREIGN KEY (Event_ID) REFERENCES EVENT(EventID),

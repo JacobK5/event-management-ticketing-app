@@ -1,14 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
 import Organizer_Home from "./Organizer_Home";
+import { getCurrentUser } from "../services/auth";
+import Organizer_Header from "../components/Organizer_Header";
 
 const Home = () => {
-  // will be replaced by a useEffect that get's the user's data and checks if they are an organizer
   const [isOrganizer, setOrganizer] = useState(false);
 
+  useEffect(() => {
+    // Get the user's data
+    const user = getCurrentUser();
+    console.log("user:", user);
+    // Check if the user is an organizer
+    setOrganizer(user && user.Organizer_SSN !== null);
+  }, []);
+  console.log("isOrganizer:", isOrganizer);
+
   if (isOrganizer) {
-    return <Organizer_Home />;
+    return (
+      <>
+        <Organizer_Header />
+        <Organizer_Home />;
+      </>
+    );
   }
 
   return (

@@ -3,7 +3,7 @@ import pool from "../database.js";
 const createRSVPTableQuery = `
   CREATE TABLE IF NOT EXISTS RSVP (
     User_ID INT,
-    Event_ID INT,
+    Event_ID VARCHAR(100),
     Status VARCHAR(20),
     PRIMARY KEY (User_ID, Event_ID),
     FOREIGN KEY (User_ID) REFERENCES USER(UserID),

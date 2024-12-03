@@ -1,3 +1,5 @@
+import EventService from "../services/eventService.js";
+
 class EventController {
   static async createEvent(req, res) {
     try {

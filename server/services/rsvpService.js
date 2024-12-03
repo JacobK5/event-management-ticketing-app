@@ -6,7 +6,7 @@ class RsvpService {
       FROM RSVP 
       WHERE User_ID = ? AND Event_ID = ?
     `;
-    const [rows] = await db.execute(checkQuery, [userId, eventId]);
+    const [rows] = await db().execute(checkQuery, [userId, eventId]);
 
     if (rows.length > 0) {
       throw new Error("RSVP already exists");
@@ -17,7 +17,7 @@ class RsvpService {
       INSERT INTO RSVP (User_ID, Event_ID, Status) 
       VALUES (?, ?, ?)
     `;
-    await db.execute(insertQuery, [userId, eventId, status]);
+    await db().execute(insertQuery, [userId, eventId, status]);
     return { message: "RSVP created" };
   }
 
@@ -28,7 +28,7 @@ class RsvpService {
       SET Status = ? 
       WHERE User_ID = ? AND Event_ID = ?
     `;
-    const [result] = await db.execute(updateQuery, [status, userId, eventId]);
+    const [result] = await db().execute(updateQuery, [status, userId, eventId]);
 
     if (result.affectedRows === 0) {
       throw new Error("RSVP not found");
@@ -43,7 +43,7 @@ class RsvpService {
       DELETE FROM RSVP 
       WHERE User_ID = ? AND Event_ID = ?
     `;
-    await db.execute(deleteQuery, [userId, eventId]);
+    await db().execute(deleteQuery, [userId, eventId]);
     return { message: "RSVP cancelled" };
   }
 }
