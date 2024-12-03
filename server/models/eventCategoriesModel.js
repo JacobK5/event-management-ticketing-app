@@ -11,7 +11,7 @@ const createEventCategoriesTableQuery = `
 
 export async function createEventCategoriesTableIfNeeded() {
   try {
-    await pool.query(createEventCategoriesTableQuery);
+    await pool().query(createEventCategoriesTableQuery);
     console.log("EVENT_CATEGORIES table created or already exists.");
   } catch (error) {
     console.error("Error creating EVENT_CATEGORIES table:", error);

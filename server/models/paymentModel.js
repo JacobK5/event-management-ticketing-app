@@ -13,7 +13,7 @@ const createPaymentTableQuery = `
 
 export async function createPaymentTableIfNeeded() {
   try {
-    await pool.query(createPaymentTableQuery);
+    await pool().query(createPaymentTableQuery);
     console.log("PAYMENT table created or already exists.");
   } catch (error) {
     console.error("Error creating PAYMENT table:", error);

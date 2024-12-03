@@ -13,7 +13,7 @@ const createResaleListingTableQuery = `
 
 export async function createResaleListingTableIfNeeded() {
   try {
-    await pool.query(createResaleListingTableQuery);
+    await pool().query(createResaleListingTableQuery);
     console.log("RESALE_LISTING table created or already exists.");
   } catch (error) {
     console.error("Error creating RESALE_LISTING table:", error);
