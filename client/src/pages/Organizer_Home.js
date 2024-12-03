@@ -5,10 +5,10 @@ const Organizer_Home = () => {
   return (
     <>
       <main className="center-content">
-        <a href="events/create" class="create">
+        <a href="events/create" className="create">
           Create New Event
         </a>
-        <a href="discounts/create" class="create">
+        <a href="discounts/create" className="create">
           Create Discount Code
         </a>
       </main>

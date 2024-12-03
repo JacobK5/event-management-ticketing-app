@@ -11,9 +11,11 @@ const Home = () => {
   useEffect(() => {
     // Get the user's data
     const user = getCurrentUser();
+    console.log("user:", user);
     // Check if the user is an organizer
-    setOrganizer(user && user.Organizer_SSN);
+    setOrganizer(user && user.Organizer_SSN !== null);
   }, []);
+  console.log("isOrganizer:", isOrganizer);
 
   if (isOrganizer) {
     return (

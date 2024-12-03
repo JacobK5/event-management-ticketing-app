@@ -2,7 +2,7 @@ import pool from "../database.js";
 
 const createEventTableQuery = `
   CREATE TABLE IF NOT EXISTS EVENT (
-    EventID INT AUTO_INCREMENT PRIMARY KEY,
+    EventID VARCHAR(100) PRIMARY KEY,
     Time TIME,
     Location_Name VARCHAR(100),
     Location_Address VARCHAR(150),

@@ -1,5 +1,8 @@
+import db from "../database.js";
+
 class EventService {
   static async createEvent({
+    name,
     time,
     locationName,
     locationAddress,
@@ -12,14 +15,14 @@ class EventService {
   }) {
     const connection = await db().getConnection();
     await connection.beginTransaction();
-
     try {
       // Insert into EVENT
       const eventQuery = `
-        INSERT INTO EVENT (Time, Location_Name, Location_Address, Date, Description, Organizer_UserID) 
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO EVENT (EventID, Time, Location_Name, Location_Address, Date, Description, Organizer_UserID) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       const [eventResult] = await connection.execute(eventQuery, [
+        name,
         time,
         locationName,
         locationAddress,
@@ -27,7 +30,7 @@ class EventService {
         description,
         organizerUserId,
       ]);
-      const eventId = eventResult.insertId;
+      const eventId = name;
 
       // Insert into EVENT_CATEGORIES for each category
       const categoryQuery = `
@@ -45,12 +48,15 @@ class EventService {
         VALUES (?, ?, ?, ?)
       `;
       for (const ticket of tickets) {
-        await connection.execute(ticketQuery, [
-          ticket.price,
-          ticket.tier,
-          ticket.details,
-          eventId,
-        ]);
+        // probably need to track ids of all tickets so we can associate discount codes with them
+        for (let i = 0; i < ticket.quantity; i++) {
+          await connection.execute(ticketQuery, [
+            ticket.price,
+            ticket.tier,
+            ticket.details,
+            eventId,
+          ]);
+        }
       }
 
       // Insert into DISCOUNT_CODE
@@ -83,6 +89,7 @@ class EventService {
       await connection.commit();
       return eventId;
     } catch (error) {
+      console.log("error creating event:", error);
       await connection.rollback();
       throw error;
     } finally {
