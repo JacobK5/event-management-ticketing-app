@@ -6,7 +6,7 @@ class UserService {
     // (In a real system we would hash the password before comparing)
     const query = "SELECT * FROM USER WHERE Email = ? AND Password = ?";
     const [rows] = await db().execute(query, [email, password]);
-    return rows.length > 0 ? rows[0] : null;
+    return rows.length > 0 ? this.getUserProfile(rows[0].UserID) : null;
   }
 
   static async createUser({
@@ -62,19 +62,7 @@ class UserService {
       // Commit the transaction if all queries succeed
       await connection.commit();
 
-      // Create a user object to return
-      const user = {
-        userId,
-        fname,
-        lname,
-        email,
-        dob,
-        phoneNumber,
-        isAttendee,
-        organizerSSN,
-      };
-
-      return user;
+      return this.getUserProfile(userId);
     } catch (error) {
       // Rollback the transaction if anything fails
       await connection.rollback();

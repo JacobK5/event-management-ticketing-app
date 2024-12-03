@@ -35,22 +35,13 @@ const Header = () => {
         <div className="menu-right">
           {loggedIn ? (
             <div className="dropdown">
-              <button
-                className="menu-item dropdown-toggle"
-                onClick={toggleDropdown}
-              >
-                👤
-              </button>
-              {showDropdown && (
-                <div className="dropdown-menu">
-                  <a href="/account" className="dropdown-item">
-                    View My Account
-                  </a>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Log out
-                  </button>
-                </div>
-              )}
+              <a href="#" className="dropbtn">
+                👤 Account{" "}
+              </a>
+              <div className="dropdown-content">
+                <a href="/account">My Account</a>
+                <a onClick={handleLogout}>Logout</a>
+              </div>
             </div>
           ) : (
             <a href="/login" className="menu-item sign-in">

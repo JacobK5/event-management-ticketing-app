@@ -21,8 +21,9 @@ const Login = () => {
 
     try {
       const response = await apiRequest("POST", "/users/login", formData);
+      console.log("login response:", response);
       if (response.status === 200) {
-        login(response); // Save user data in localStorage
+        login(response.data); // Save user data in localStorage
         window.location.href = "/"; // Redirect to the homepage after successful login
       } else {
         alert("Invalid username or password, please try again");
