@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Organizer_Home from "./pages/Organizer_Home";
 import Create_Event from "./pages/Create_Event";
 import Create_Discount from "./pages/Create_Discount";
+import EventCard from "./components/EventCard";
 // import Counter from "./pages/Example";
 
 
@@ -24,6 +25,7 @@ const App = () => {
         <>
           <Organizer_Header/>
           <Create_Discount/>
+          <EventCard/>
         </>
         
       ) : (
