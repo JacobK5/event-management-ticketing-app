@@ -97,10 +97,10 @@ class EventService {
     }
   }
 
-  static async getEvents({ category, location, maxPrice }) {
+  static async getEvents({ category, location, maxPrice, searchTerm }) {
     // Make base query
     let query = `
-      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName
+      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName, u.UserID AS OrganizerID
       FROM EVENT e
       JOIN USER u ON e.Organizer_UserID = u.UserID
     `;
@@ -127,6 +127,11 @@ class EventService {
         )
       `;
       params.push(maxPrice);
+    }
+
+    if (searchTerm) {
+      query += ` AND e.EventID LIKE ?`; // Match search term with EventID (event name)
+      params.push(`%${searchTerm}%`);
     }
 
     const [events] = await db().execute(query, params);
