@@ -2,7 +2,7 @@ import pool from "../database.js";
 
 const createEventTableQuery = `
   CREATE TABLE IF NOT EXISTS EVENT (
-    EventID INT AUTO_INCREMENT PRIMARY KEY,
+    EventID VARCHAR(100) PRIMARY KEY,
     Time TIME,
     Location_Name VARCHAR(100),
     Location_Address VARCHAR(150),
@@ -15,7 +15,7 @@ const createEventTableQuery = `
 
 export async function createEventTableIfNeeded() {
   try {
-    await pool.query(createEventTableQuery);
+    await pool().query(createEventTableQuery);
     console.log("EVENT table created or already exists.");
   } catch (error) {
     console.error("Error creating EVENT table:", error);

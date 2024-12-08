@@ -11,7 +11,7 @@ const createRefundTableQuery = `
 
 export async function createRefundTableIfNeeded() {
   try {
-    await pool.query(createRefundTableQuery);
+    await pool().query(createRefundTableQuery);
     console.log("REFUND table created or already exists.");
   } catch (error) {
     console.error("Error creating REFUND table:", error);

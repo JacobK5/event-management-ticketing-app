@@ -6,7 +6,7 @@ class TicketService {
     creditCardInfo,
     discountCode,
   }) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
     await connection.beginTransaction();
 
     try {
@@ -97,7 +97,7 @@ class TicketService {
         INSERT INTO RESALE_LISTING (Ticket_ID, Price, User_ID) 
         VALUES (?, ?, ?)
       `;
-    await db.execute(listingQuery, [ticketId, price, userId]);
+    await db().execute(listingQuery, [ticketId, price, userId]);
     return { message: "Ticket listed for resale" };
   }
 
@@ -107,7 +107,7 @@ class TicketService {
     method,
     creditCardInfo,
   }) {
-    const connection = await db.getConnection();
+    const connection = await db().getConnection();
     await connection.beginTransaction();
 
     try {

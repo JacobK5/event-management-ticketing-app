@@ -4,7 +4,7 @@ class PaymentService {
       INSERT INTO REFUND (Ref_Num, Status, Date)
       VALUES (?, ?, NOW())
     `;
-    await db.execute(query, [refNum, status]);
+    await db().execute(query, [refNum, status]);
     return { message: "Refund request created" };
   }
 }

@@ -9,7 +9,7 @@ const createAttendeeTableQuery = `
 
 export async function createAttendeeTableIfNeeded() {
   try {
-    await pool.query(createAttendeeTableQuery);
+    await pool().query(createAttendeeTableQuery);
     console.log("ATTENDEE table created or already exists.");
   } catch (error) {
     console.error("Error creating ATTENDEE table:", error);
