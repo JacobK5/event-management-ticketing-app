@@ -102,7 +102,11 @@ class EventService {
   static async getEvents({ category, location, maxPrice, searchTerm }) {
     // Make base query
     let query = `
-      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName, u.UserID AS OrganizerID
+      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName, u.UserID AS OrganizerID, EXISTS (
+          SELECT 1 
+          FROM TICKET t 
+          WHERE t.Event_ID = e.EventID
+        ) AS isPaid
       FROM EVENT e
       JOIN USER u ON e.Organizer_UserID = u.UserID
     `;

@@ -7,8 +7,7 @@ const EventCard = ({ event }) => {
   console.log("event:", event);
 
   // Determine if the event is free based on ticket price
-  const isFreeEvent =
-    !event.tickets || event.tickets.every((ticket) => ticket.price === 0);
+  const isFreeEvent = event.isPaid === 0;
 
   // use to show edit button and other stuff for the organizer if needed
   const userIsOrganizer = getCurrentUser()?.UserID === event.OrganizerID;
