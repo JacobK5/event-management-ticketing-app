@@ -12,6 +12,7 @@ import "./styles/style.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ViewEvents from "./pages/ViewEvents";
 import Account from "./pages/Account";
+import OrganizerEvents from "./pages/OrganizerEvents";
 
 const App = () => {
   return (
@@ -28,7 +29,8 @@ const App = () => {
         />
         <Route path="/discounts/create" element={<Create_Discount />} />
         <Route path="/account" element={<Account />} />
-        {/* will have path like /events/search/:searchTerm and another like /events/by-category/:category for the filtered view events pages */}
+        <Route path="/my-events" element={<OrganizerEvents />} />
+        {/* <Route path="/events/edit/:id" element=(<EditEvent />) /> will be used to edit events when Kevin adds it*/}
       </Routes>
     </Router>
   );

@@ -28,6 +28,15 @@ class EventController {
     }
   }
 
+  static async getOrganizerEvents(req, res) {
+    try {
+      const events = await EventService.getOrganizerEvents(req.params.id);
+      return res.status(200).json(events);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
   static async getAttendees(req, res) {
     try {
       const attendees = await EventService.getAttendees(req.params.id);

@@ -81,6 +81,16 @@ const EventCard = ({ event }) => {
               )}
               {isFreeEvent && <button className="popup-btn">RSVP</button>}
             </div>
+            {userIsOrganizer && (
+              <button
+                className="popup-btn"
+                onClick={() =>
+                  (window.location.href = `/events/edit/${event.EventID}`)
+                }
+              >
+                Edit Event
+              </button>
+            )}
             <button className="close-btn" onClick={hideDetails}>
               Close
             </button>

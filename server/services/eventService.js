@@ -144,6 +144,16 @@ class EventService {
     return events;
   }
 
+  static async getOrganizerEvents(organizerUserId) {
+    const query = `
+    SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, e.Organizer_UserID AS OrganizerID
+    FROM EVENT e
+    WHERE e.Organizer_UserID = ?
+  `;
+    const [events] = await db().execute(query, [organizerUserId]);
+    return events;
+  }
+
   static async getEventDetails(eventId) {
     const connection = await db().getConnection();
 
