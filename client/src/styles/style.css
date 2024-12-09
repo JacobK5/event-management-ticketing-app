@@ -3,7 +3,8 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: #000;
-  background: url('https://media.gettyimages.com/id/1291883931/video/concert-stage-light-effect.jpg?s=640x640&k=20&c=LVZkxi2VO5_PCiy2p5wc8fVANohBjodDkSdV_V8jdUo=') no-repeat center center fixed;
+  background: url("https://media.gettyimages.com/id/1291883931/video/concert-stage-light-effect.jpg?s=640x640&k=20&c=LVZkxi2VO5_PCiy2p5wc8fVANohBjodDkSdV_V8jdUo=")
+    no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -48,6 +49,12 @@ header {
 .menu-item:hover {
   background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white hover */
   color: #000;
+}
+
+.menu-item.active {
+  background-color: rgba(255, 255, 255, 0.3); /* Highlighted background */
+  color: #000; /* Highlighted text color */
+  font-weight: bold; /* Optional: Make the text bold */
 }
 
 .sign-in {

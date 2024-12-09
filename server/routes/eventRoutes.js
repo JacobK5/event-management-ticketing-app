@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post("/", EventController.createEvent);
 router.get("/", EventController.getEvents);
+router.get("/organizer/:id", EventController.getOrganizerEvents);
 router.get("/:id", EventController.getEventDetails);
 router.get("/:id/attendees", EventController.getAttendees);
 router.put("/:id", EventController.editEvent);

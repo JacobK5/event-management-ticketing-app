@@ -59,30 +59,32 @@ class EventService {
         }
       }
 
-      // Insert into DISCOUNT_CODE
-      const discountQuery = `
+      if (discountCodes?.length > 0) {
+        // Insert into DISCOUNT_CODE
+        const discountQuery = `
         INSERT INTO DISCOUNT_CODE (Code, Amount, Max_Uses, User_ID) 
         VALUES (?, ?, ?, ?)
       `;
-      const ticketDiscountQuery = `
+        const ticketDiscountQuery = `
         INSERT INTO TICKET_DISCOUNT (Ticket_ID, Discount_Code) 
         VALUES (?, ?)
       `;
-      for (const discount of discountCodes) {
-        const [discountResult] = await connection.execute(discountQuery, [
-          discount.code,
-          discount.amount,
-          discount.maxUses,
-          organizerUserId, // NOTE: We will probably just get rid of the User_ID part for discount codes
-        ]);
-
-        // NOTE: This logic will also need to change, we might need to split up making an event and adding discounts so it's easier to choose which tickets the codes apply to
-        // Insert into TICKET_DISCOUNT
-        for (const ticketId of discount.ticketIds) {
-          await connection.execute(ticketDiscountQuery, [
-            ticketId,
+        for (const discount of discountCodes) {
+          const [discountResult] = await connection.execute(discountQuery, [
             discount.code,
+            discount.amount,
+            discount.maxUses,
+            organizerUserId, // NOTE: We will probably just get rid of the User_ID part for discount codes
           ]);
+
+          // NOTE: This logic will also need to change, we might need to split up making an event and adding discounts so it's easier to choose which tickets the codes apply to
+          // Insert into TICKET_DISCOUNT
+          for (const ticketId of discount.ticketIds) {
+            await connection.execute(ticketDiscountQuery, [
+              ticketId,
+              discount.code,
+            ]);
+          }
         }
       }
 
@@ -97,10 +99,14 @@ class EventService {
     }
   }
 
-  static async getEvents({ category, location, maxPrice }) {
+  static async getEvents({ category, location, maxPrice, searchTerm }) {
     // Make base query
     let query = `
-      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName
+      SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, u.Fname AS OrganizerName, u.UserID AS OrganizerID, EXISTS (
+          SELECT 1 
+          FROM TICKET t 
+          WHERE t.Event_ID = e.EventID
+        ) AS isPaid
       FROM EVENT e
       JOIN USER u ON e.Organizer_UserID = u.UserID
     `;
@@ -129,7 +135,22 @@ class EventService {
       params.push(maxPrice);
     }
 
+    if (searchTerm) {
+      query += ` AND e.EventID LIKE ?`; // Match search term with EventID (event name)
+      params.push(`%${searchTerm}%`);
+    }
+
     const [events] = await db().execute(query, params);
+    return events;
+  }
+
+  static async getOrganizerEvents(organizerUserId) {
+    const query = `
+    SELECT e.EventID, e.Time, e.Location_Name, e.Location_Address, e.Date, e.Description, e.Organizer_UserID AS OrganizerID
+    FROM EVENT e
+    WHERE e.Organizer_UserID = ?
+  `;
+    const [events] = await db().execute(query, [organizerUserId]);
     return events;
   }
 

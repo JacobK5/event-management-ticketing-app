@@ -1,3 +1,5 @@
+import PaymentService from "../services/paymentService.js";
+
 class PaymentController {
   static async requestRefund(req, res) {
     try {

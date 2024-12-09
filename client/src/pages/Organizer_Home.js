@@ -11,6 +11,9 @@ const Organizer_Home = () => {
         <a href="discounts/create" className="create">
           Create Discount Code
         </a>
+        <a href="my-events" className="create">
+          View My Events
+        </a>
       </main>
     </>
   );

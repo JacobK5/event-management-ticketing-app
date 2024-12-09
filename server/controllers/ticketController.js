@@ -1,3 +1,5 @@
+import TicketService from "../services/ticketService.js";
+
 class TicketController {
   static async purchaseTicket(req, res) {
     try {
@@ -10,12 +12,7 @@ class TicketController {
 
   static async createResaleListing(req, res) {
     try {
-      const { ticketId, price, userId } = req.body;
-      const result = await TicketService.createResaleListing({
-        ticketId,
-        price,
-        userId,
-      });
+      const result = await TicketService.createResaleListing(req.body);
       return res.status(200).json(result);
     } catch (error) {
       return res.status(500).json({ error: error.message });

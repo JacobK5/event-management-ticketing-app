@@ -1,12 +1,36 @@
 import React, { useState } from "react";
-import "./EventCard.css";
+import "../styles/EventCard.css";
+import { getCurrentUser } from "../services/auth";
 
-const EventCard = () => {
+const EventCard = ({ event }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [isFreeEvent, setIsFreeEvent] = useState(false);
+  console.log("event:", event);
 
-  const showDetails = (freeEvent) => {
-    setIsFreeEvent(freeEvent);
+  // Determine if the event is free based on ticket price
+  const isFreeEvent = event.isPaid === 0;
+
+  // use to show edit button and other stuff for the organizer if needed
+  const userIsOrganizer = getCurrentUser()?.UserID === event.OrganizerID;
+
+  const formattedDate = new Date(event.Date).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const timeParts = event.Time.split(":");
+  const timeAsDate = new Date();
+  timeAsDate.setHours(
+    parseInt(timeParts[0]),
+    parseInt(timeParts[1]),
+    parseInt(timeParts[2])
+  );
+  const formattedTime = timeAsDate.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const showDetails = () => {
     setIsPopupVisible(true);
   };
 
@@ -18,12 +42,17 @@ const EventCard = () => {
     <div>
       {/* Event Card */}
       <div className="event-card">
-        <h2 className="event-title">Event Title</h2>
-        <p className="event-info">Date | Time</p>
-        <p className="event-location">Location</p>
+        <h2 className="event-title">{event.EventID}</h2>{" "}
+        {/* Display EventID as the title */}
+        <p className="event-info">
+          {formattedDate} | {formattedTime}
+        </p>{" "}
+        {/* Display date and time */}
+        <p className="event-location">{event.Location_Name}</p>{" "}
+        {/* Display event location */}
         <button
           className="details-btn"
-          onClick={() => showDetails(false)} // Change to true for free events
+          onClick={showDetails} // Show details popup
         >
           Details
         </button>
@@ -33,10 +62,16 @@ const EventCard = () => {
       {isPopupVisible && (
         <div className="popup">
           <div className="popup-content">
-            <h2 className="popup-title">Event Title</h2>
-            <p className="popup-info">Date | Time</p>
-            <p className="popup-location">Location</p>
-            <p className="popup-description">Description</p>
+            <h2 className="popup-title">{event.EventID}</h2>{" "}
+            {/* Display EventID */}
+            <p className="popup-info">
+              {formattedDate} | {formattedTime}
+            </p>{" "}
+            {/* Display date and time */}
+            <p className="popup-location">{event.Location_Name}</p>{" "}
+            {/* Display location */}
+            <p className="popup-description">{event.Description}</p>{" "}
+            {/* Display description */}
             <div className="popup-buttons">
               {!isFreeEvent && (
                 <>
@@ -46,6 +81,16 @@ const EventCard = () => {
               )}
               {isFreeEvent && <button className="popup-btn">RSVP</button>}
             </div>
+            {userIsOrganizer && (
+              <button
+                className="popup-btn"
+                onClick={() =>
+                  (window.location.href = `/events/edit/${event.EventID}`)
+                }
+              >
+                Edit Event
+              </button>
+            )}
             <button className="close-btn" onClick={hideDetails}>
               Close
             </button>

@@ -123,10 +123,12 @@ class UserService {
   static async getUserTickets(userId) {
     // Get the tickets owned by the user
     const query = `
-      SELECT t.Ticket_ID, t.Price, t.Tier, t.Details, e.EventID, e.Time, e.Date, 
-             e.Location_Name, e.Location_Address, e.Description
+      SELECT t.Ticket_ID, t.Price, t.Tier, t.Details, t.Pmt_Ref_Num, e.EventID, e.Time, e.Date, 
+             e.Location_Name, e.Location_Address, e.Description, r.Status AS refundStatus, rl.Listing_ID AS resaleListingId
       FROM TICKET t
       JOIN EVENT e ON t.Event_ID = e.EventID
+      LEFT JOIN REFUND r ON t.Pmt_Ref_Num = r.Ref_Num
+      LEFT JOIN RESALE_LISTING rl ON t.Ticket_ID = rl.Ticket_ID
       WHERE t.Holder_UserID = ?
     `;
     const [rows] = await db().execute(query, [userId]);
@@ -134,6 +136,7 @@ class UserService {
   }
 
   static async getUserRsvps(userId) {
+    console.log("getting rsvps for user:", userId);
     // Get RSVPs of the user with event details
     const query = `
       SELECT e.EventID, e.Time, e.Date, e.Location_Name, e.Location_Address, 
