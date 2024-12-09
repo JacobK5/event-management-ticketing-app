@@ -8,9 +8,6 @@ const Organizer_Home = () => {
         <a href="events/create" className="create">
           Create New Event
         </a>
-        <a href="discounts/create" className="create">
-          Create Discount Code
-        </a>
         <a href="my-events" className="create">
           View My Events
         </a>

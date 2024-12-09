@@ -12,18 +12,18 @@ const Organizer_Header = () => {
     <header>
       <nav className="menu">
         <div className="menu-left"></div>
-
+          <a href="#" className="menu-item">View Events</a>
         <div className="dropdown">
+
           <a href="#" className="dropbtn">
             👤 Account{" "}
           </a>
+
           <div className="dropdown-content">
-            <a href="#" className="menu-item">
-              View Event
-            </a>
-            <a href="#">View Discount</a>
+            <a href="/account">My Account</a>
             <a onClick={handleLogout}>Logout</a>
           </div>
+
         </div>
       </nav>
     </header>

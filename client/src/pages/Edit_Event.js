@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import apiRequest from "../services/api";
 import { getCurrentUser } from "../services/auth";
+import { useParams } from 'react-router-dom';
 
 // NOTE: Still need to implement adding discounts here
 
-const Create_Event = () => {
+const Edit_Event = () => {
+    
+  const [event, setEvent] = useState([]); // State to store event
+  const [ticketTiers, setTicketTiers] = useState([]);
+  const [discount, setDiscount] = useState([]);
+
   const [showTicketInput, setShowTicketInput] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -16,10 +22,27 @@ const Create_Event = () => {
     type: "",
     description: "",
     categories: [],
-  });
-
-  const [ticketTiers, setTicketTiers] = useState([]);
-  const [discount, setDiscount] = useState([]);
+  }); 
+  const {id} = useParams();
+  useEffect(() => {
+    const fetchEventData = async () => {
+      try {
+        
+        console.log("event:", id);
+        const eventInfo = await apiRequest(
+          "GET",
+          `/events/${id}`
+        );
+        console.log("info:", eventInfo.data);
+        
+        setEvent(eventInfo.data);
+        console.log("ticket: ",eventInfo.data.tick);
+        // setTicketTiers(event.ticket);
+      } catch (error) {
+        console.error("Error fetching Account:", error);
+      }
+    }; fetchEventData();
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -89,11 +112,11 @@ const Create_Event = () => {
     <Header/>
     <main className="center-content">
       <div>
-        <h2 className="form_title">Create Event</h2>
+        <h2 className="form_title">Edit Event</h2>
 
         <form className="form_box" onSubmit={handleSubmit}>
           <label className="input_title">
-            Event Name:
+            Current Event Name: {event.EventID} | Set New Event Name: 
             <input
               className="form-group"
               type="text"
@@ -105,7 +128,7 @@ const Create_Event = () => {
           </label>
 
           <label className="input_title">
-            Location Name:
+            Current Location Name: {event.Location_Name} | Set New Loaction Name: 
             <input
               className="form-group"
               type="text"
@@ -117,7 +140,7 @@ const Create_Event = () => {
           </label>
 
           <label className="input_title">
-            Location Address:
+            Location Address: {event.Location_Name} | Set New Location: 
             <input
               className="form-group"
               type="text"
@@ -129,7 +152,7 @@ const Create_Event = () => {
           </label>
 
           <label className="input_title">
-            Date:
+            Current Set Date: {event.Date} | Set New Date: 
             <input
               className="form-group"
               type="date"
@@ -141,7 +164,7 @@ const Create_Event = () => {
           </label>
 
           <label className="input_title">
-            Time:
+            Current Start Time: {event.Time} | Set New Start Time: 
             <input
               className="timearea"
               type="time"
@@ -153,7 +176,7 @@ const Create_Event = () => {
           </label>
 
           <label className="input_title">
-            Category:
+            Current Set Category: {event.categories} | Set New Category: 
             <select
               className="form-group"
               id="category"
@@ -174,7 +197,7 @@ const Create_Event = () => {
             </select>
           </label>
 
-          <label className="input_title">
+          {/* <label className="input_title">
             Type:
             <select
               style={{
@@ -194,23 +217,24 @@ const Create_Event = () => {
               <option value="rsvp">RVSP</option>
               <option value="ticket">Ticket</option>
             </select>
-          </label>
+          </label> */}
             
-          {showTicketInput && (
+  
             <>
-            <div>
+            <div> 
               <button type="button" style={{marginBottom:'10px'}} onClick={addTicketTier}>
-                Add Ticket Tier
+                Add Ticket Tier 
               </button>
-              {ticketTiers.map((tier, index) => (
-                <div key={index} className="form-ticket">
+              {/* need to fix the ticket not displaying when grabbing ticket info */}
+              {ticketTiers.map((ticket, index) => (
+                <div className="form-ticket">
                   <label className="input_title">
-                    Tier:
+                    Tier:  
                     <input
                       className="form-ticket"
                       type="text"
                       name="tier"
-                      value={tier.tier}
+      
                       onChange={(e) => handleTicketTierChange(index, e)}
                       required
                     />
@@ -221,7 +245,7 @@ const Create_Event = () => {
                       className="form-ticket"
                       type="number"
                       name="price"
-                      value={tier.price}
+                      // value={tier.price}
                       onChange={(e) => handleTicketTierChange(index, e)}
                       required
                     />
@@ -232,7 +256,7 @@ const Create_Event = () => {
                       className="form-ticket"
                       type="number"
                       name="quantity"
-                      value={tier.quantity}
+                      // value={tier.quantity}
                       onChange={(e) => handleTicketTierChange(index, e)}
                       required
                     />
@@ -243,7 +267,7 @@ const Create_Event = () => {
                       className="form-ticket"
                       type="text"
                       name="details"
-                      value={tier.details}
+                      // value={tier.details}
                       onChange={(e) => handleTicketTierChange(index, e)}
                       required
                     />
@@ -258,6 +282,7 @@ const Create_Event = () => {
               <button type="button" style={{marginBottom:'10px'}} onClick={addDiscount}>
                 Add Discount Code
               </button>
+              {/* need to add discount code to database for events */}
               {discount.map((tier, index) => (
                 <div key={index} className="form-ticket">
                   <label className="input_title">
@@ -300,10 +325,12 @@ const Create_Event = () => {
               ))}
             </div>
             </>
-          )}
+    
+          {/* need to diplay the discounts and ticket tiers to edit since they need to be added into the database*/}
+          <label className="input_title"> Number of Attendees: {event.ticketsSold}</label>
           <div>
             <label className="input_title">
-            Description:
+            Current Set Description: {event.Description} <br style={{marginBottom:'10px', marginTop:'10px'}}></br> Set New Description: 
             <div>
               <input
               className="textarea"
@@ -328,4 +355,4 @@ const Create_Event = () => {
   );
 };
 
-export default Create_Event;
+export default Edit_Event;

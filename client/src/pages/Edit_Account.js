@@ -1,10 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import makeRequest from "../services/api";
 import { login } from "../services/auth";
 import Header from "../components/Header";
+import apiRequest from "../services/api"; // Helper function for API calls
+import { getCurrentUser } from "../services/auth";
 import '../styles/form.css';
 
-const Register = () => {
+const Edit_Account = () => {
+  const [account, setAccount] = useState([]);
+  const user = getCurrentUser();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        console.log("user:", user);
+        const userProfile = await apiRequest(
+          "GET",
+          `users/profile/${user.UserID}`
+        );
+        console.log("userprofile:", userProfile);
+        setAccount(userProfile.data);
+      } catch (error) {
+        console.error("Error fetching Account:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -26,26 +49,14 @@ const Register = () => {
     });
   };
 
-  const handleSelectChange = (event) => {
-    const selectedValue = event.target.value;
-    setFormData({
-      ...formData,
-      accountType: selectedValue,
-    });
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage(null);
 
-    const isAttendee = formData.accountType === "rsvp";
-    const organizerSSN =
-      formData.accountType === "ticket" ? formData.organizerSSN : null;
-
     console.log("submitting data:", formData);
 
     try {
-      const response = await makeRequest("POST", "/users/register", formData);
+      const response = await makeRequest("POST",  `users/profile/${user.UserID}`, formData);
       console.log("response:", response);
 
       if (response.status === 201) {
@@ -69,121 +80,65 @@ const Register = () => {
     <main classNames="center-content">
       {/* Form to fill in user details */}
       <form className="register_box" onSubmit={handleSubmit}>
-        <h2 className="form_title">Create Account</h2>
-          <label className="input_title">
-            First Name:
+        <h2 className="form_title">Edit Account</h2>
+       
+          <label className="input_title" >
+            Set First Name: {user.Fname} | New First Name: 
             <input
               className="form-group"
               type="text"
               name="fname"
               value={formData.fname}
               onChange={handleInputChange}
-              required
             />
           </label>
+
           <label className="input_title">
-            Last Name:
+            Set Last Name: {user.Lname} | New Last Name: 
             <input
               className="form-group"
               type="text"
               name="lname"
               value={formData.lname}
               onChange={handleInputChange}
-              required
             />
           </label>
           <label className="input_title">
-            Email:
+            Set Email: {user.Email} | New Email: 
             <input
               className="form-group"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              required
+    
             />
           </label>
+
           <label className="input_title">
-            Username:
-            <input
-              className="form-group"
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className="input_title">
-            Password:
+            Set Password: ********* | New Password: 
             <input
               className="form-group"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              required
+
             />
           </label>
           <label className="input_title">
-            Phone Number:
+            Set Phone Number: {user.Phone_number} | New Phone Number: 
             <input
               className="form-group"
               type="text"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleInputChange}
-              required
+
             />
           </label>
           <label className="input_title">
-            Date of Birth:
-            <input
-              className="form-group"
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className="input_title">
-            Account Type:
-            <select
-              style={{
-                width: "80px", // Fixed width to avoid shifting
-                marginBottom: "20px",
-                marginLeft: "5px",
-                transition: "width 0.3s ease", // Smooth resize animation
-              }}
-              id="type"
-              name="accountType"
-              value={formData.accountType}
-              onChange={handleSelectChange}
-              required
-            >
-              <option value="" disabled>
-                -- Select Type of Account --
-              </option>
-              <option value="rsvp">Attendee</option>
-              <option value="ticket">Organizer</option>
-            </select>
-            {formData.accountType === "ticket" && (
-              <input
-                style={{
-                  marginBottom: "20px",
-                  marginLeft: "15px",
-                  width: "120px", // Fixed width to avoid shifting
-                  transition: "width 0.3s ease", // Smooth resize animation
-                }}
-                type="text"
-                name="organizerSSN"
-                placeholder="Enter SSN"
-                value={formData.organizerSSN}
-                onChange={handleInputChange}
-                required
-              />
-            )}
+            Date of Birth: {user.DOB} 
           </label>
           <button className="submit" type="submit">Submit</button>
           {/* creates account and logs user in according to what account type they chose */}
@@ -199,4 +154,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Edit_Account;
