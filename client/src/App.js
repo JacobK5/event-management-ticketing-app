@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Organizer_Home from "./pages/Organizer_Home";
 import Create_Event from "./pages/Create_Event";
 import Create_Discount from "./pages/Create_Discount";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Register from "./pages/Register";
 import "./styles/style.css";
 // import Counter from "./pages/Example";

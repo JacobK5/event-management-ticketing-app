@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import makeRequest from "../services/api";
 import { login } from "../services/auth";
+import Header from "../components/Header";
+import '../styles/form.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -63,136 +65,137 @@ const Register = () => {
 
   return (
     <>
-      <main className="register_box">
-        <div>
-          <h2 className="form_title">Create Account</h2>
-          {/* Form to fill in user details */}
-          <form className="form_box" onSubmit={handleSubmit}>
-            <label className="input_title">
-              First Name:
+    <Header/>
+    <main classNames="center-content">
+      {/* Form to fill in user details */}
+      <form className="register_box" onSubmit={handleSubmit}>
+        <h2 className="form_title">Create Account</h2>
+          <label className="input_title">
+            First Name:
+            <input
+              className="form-group"
+              type="text"
+              name="fname"
+              value={formData.fname}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Last Name:
+            <input
+              className="form-group"
+              type="text"
+              name="lname"
+              value={formData.lname}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Email:
+            <input
+              className="form-group"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Username:
+            <input
+              className="form-group"
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Password:
+            <input
+              className="form-group"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Phone Number:
+            <input
+              className="form-group"
+              type="text"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Date of Birth:
+            <input
+              className="form-group"
+              type="date"
+              name="dob"
+              value={formData.dob}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label className="input_title">
+            Account Type:
+            <select
+              style={{
+                width: "80px", // Fixed width to avoid shifting
+                marginBottom: "20px",
+                marginLeft: "5px",
+                transition: "width 0.3s ease", // Smooth resize animation
+              }}
+              id="type"
+              name="accountType"
+              value={formData.accountType}
+              onChange={handleSelectChange}
+              required
+            >
+              <option value="" disabled>
+                -- Select Type of Account --
+              </option>
+              <option value="rsvp">Attendee</option>
+              <option value="ticket">Organizer</option>
+            </select>
+            {formData.accountType === "ticket" && (
               <input
-                className="form-group"
-                type="text"
-                name="fname"
-                value={formData.fname}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Last Name:
-              <input
-                className="form-group"
-                type="text"
-                name="lname"
-                value={formData.lname}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Email:
-              <input
-                className="form-group"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Username:
-              <input
-                className="form-group"
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Password:
-              <input
-                className="form-group"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Phone Number:
-              <input
-                className="form-group"
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Date of Birth:
-              <input
-                className="form-group"
-                type="date"
-                name="dob"
-                value={formData.dob}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label className="input_title">
-              Account Type:
-              <select
                 style={{
-                  width: "80px", // Fixed width to avoid shifting
                   marginBottom: "20px",
-                  marginLeft: "5px",
+                  marginLeft: "15px",
+                  width: "120px", // Fixed width to avoid shifting
                   transition: "width 0.3s ease", // Smooth resize animation
                 }}
-                id="type"
-                name="accountType"
-                value={formData.accountType}
-                onChange={handleSelectChange}
+                type="text"
+                name="organizerSSN"
+                placeholder="Enter SSN"
+                value={formData.organizerSSN}
+                onChange={handleInputChange}
                 required
-              >
-                <option value="" disabled>
-                  -- Select Type of Account --
-                </option>
-                <option value="rsvp">Attendee</option>
-                <option value="ticket">Organizer</option>
-              </select>
-              {formData.accountType === "ticket" && (
-                <input
-                  style={{
-                    marginBottom: "20px",
-                    marginLeft: "15px",
-                    width: "120px", // Fixed width to avoid shifting
-                    transition: "width 0.3s ease", // Smooth resize animation
-                  }}
-                  type="text"
-                  name="organizerSSN"
-                  placeholder="Enter SSN"
-                  value={formData.organizerSSN}
-                  onChange={handleInputChange}
-                  required
-                />
-              )}
-            </label>
-            {/* creates account and logs user in according to what account type they chose */}
-            <button className="submit" type="submit">
-              Submit
-            </button>
+              />
+            )}
+          </label>
+          <button className="submit" type="submit">Submit</button>
+          {/* creates account and logs user in according to what account type they chose */}
+          
 
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-          </form>
-        </div>
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      </form>
+      
       </main>
     </>
+      
+
   );
 };
 

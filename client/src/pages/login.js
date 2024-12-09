@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import apiRequest from "../services/api";
 import { login } from "../services/auth";
+import Header from "../components/Header";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,9 @@ const Login = () => {
   };
 
   return (
-    <main className="center-content">
+    <>
+      <Header />
+      <main className="center-content">
       <form className="form_box" onSubmit={handleSubmit}>
         <label className="form_title">Login: </label>
         <label className="input_title">
@@ -74,6 +77,8 @@ const Login = () => {
         </div>
       </form>
     </main>
+    </>
+    
   );
 };
 

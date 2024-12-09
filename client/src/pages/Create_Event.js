@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import O_Header from "../components/Organizer_Header";
 import apiRequest from "../services/api";
 import { getCurrentUser } from "../services/auth";
 
@@ -18,6 +19,7 @@ const Create_Event = () => {
   });
 
   const [ticketTiers, setTicketTiers] = useState([]);
+  const [discount, setDiscount] = useState([]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -43,6 +45,18 @@ const Create_Event = () => {
   const removeTicketTier = (index) => {
     const updatedTicketTiers = ticketTiers.filter((_, i) => i !== index);
     setTicketTiers(updatedTicketTiers);
+  };
+
+  const addDiscount = () => {
+    setDiscount([
+      ...discount,
+      { tier: "", price: "", quantity: "", details: "" },
+    ]);
+  };
+
+  const removeDiscount = (index) => {
+    const updatedDiscount = discount.filter((_, i) => i !== index);
+    setDiscount(updatedDiscount);
   };
 
   const handleTicketTierChange = (index, event) => {
@@ -71,6 +85,8 @@ const Create_Event = () => {
   };
 
   return (
+    <>
+    <O_Header/>
     <main className="center-content">
       <div>
         <h2 className="form_title">Create Event</h2>
@@ -179,17 +195,19 @@ const Create_Event = () => {
               <option value="ticket">Ticket</option>
             </select>
           </label>
-
+            
           {showTicketInput && (
             <>
-              <button type="button" onClick={addTicketTier}>
+            <div>
+              <button type="button" style={{marginBottom:'10px'}} onClick={addTicketTier}>
                 Add Ticket Tier
               </button>
               {ticketTiers.map((tier, index) => (
-                <div key={index} className="ticket-tier">
-                  <label>
+                <div key={index} className="form-ticket">
+                  <label className="input_title">
                     Tier:
                     <input
+                      className="form-ticket"
                       type="text"
                       name="tier"
                       value={tier.tier}
@@ -197,9 +215,10 @@ const Create_Event = () => {
                       required
                     />
                   </label>
-                  <label>
+                  <label className="input_title">
                     Price:
                     <input
+                      className="form-ticket"
                       type="number"
                       name="price"
                       value={tier.price}
@@ -207,9 +226,10 @@ const Create_Event = () => {
                       required
                     />
                   </label>
-                  <label>
+                  <label className="input_title">
                     Quantity:
                     <input
+                      className="form-ticket"
                       type="number"
                       name="quantity"
                       value={tier.quantity}
@@ -217,41 +237,94 @@ const Create_Event = () => {
                       required
                     />
                   </label>
-                  <label>
+                  <label className="input_title">
                     Details:
                     <input
+                      className="form-ticket"
                       type="text"
                       name="details"
                       value={tier.details}
                       onChange={(e) => handleTicketTierChange(index, e)}
                       required
                     />
-                  </label>
+                  </label >
                   <button type="button" onClick={() => removeTicketTier(index)}>
                     -
                   </button>
                 </div>
               ))}
+            </div>  
+            <div>
+              <button type="button" style={{marginBottom:'10px'}} onClick={addDiscount}>
+                Add Discount Code
+              </button>
+              {discount.map((tier, index) => (
+                <div key={index} className="form-ticket">
+                  <label className="input_title">
+                    Discount ID:
+                    <input
+                      className="form-ticket"
+                      type="text"
+                      name="tier"
+                      value={tier.tier}
+                      onChange={(e) => handleTicketTierChange(index, e)}
+                      required
+                    />
+                  </label>
+                  <label className="input_title">
+                    Max Uses:
+                    <input
+                      className="form-ticket"
+                      type="number"
+                      name="price"
+                      value={tier.price}
+                      onChange={(e) => handleTicketTierChange(index, e)}
+                      required
+                    />
+                  </label>
+                  <label className="input_title">
+                    Discount Amount
+                    <input
+                      className="form-ticket"
+                      type="number"
+                      name="quantity"
+                      value={tier.quantity}
+                      onChange={(e) => handleTicketTierChange(index, e)}
+                      required
+                    />
+                  </label>
+                  <button type="button" onClick={() => removeDiscount(index)}>
+                    -
+                  </button>
+                </div>
+              ))}
+            </div>
             </>
           )}
-
-          <label className="input_title">
+          <div>
+            <label className="input_title">
             Description:
-            <input
+            <div>
+              <input
               className="textarea"
               type="text"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
             />
-          </label>
-
-          <button className="submit" type="submit">
-            Submit
-          </button>
+            </div>
+            
+            </label>
+          </div>
+          
+          <div>
+            <button className="submit" type="submit">Submit</button>
+          </div>
+          
         </form>
       </div>
     </main>
+    </>
   );
 };
 
