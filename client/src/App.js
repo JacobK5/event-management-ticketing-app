@@ -11,6 +11,7 @@ import "./styles/style.css";
 // import Counter from "./pages/Example";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ViewEvents from "./pages/ViewEvents";
+import Account from "./pages/Account";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           element={<ViewEvents />}
         />
         <Route path="/discounts/create" element={<Create_Discount />} />
+        <Route path="/account" element={<Account />} />
         {/* will have path like /events/search/:searchTerm and another like /events/by-category/:category for the filtered view events pages */}
       </Routes>
     </Router>

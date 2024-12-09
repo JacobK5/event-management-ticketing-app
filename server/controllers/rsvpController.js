@@ -1,3 +1,5 @@
+import RsvpService from "../services/rsvpService.js";
+
 class RsvpController {
   static async createRsvp(req, res) {
     try {
