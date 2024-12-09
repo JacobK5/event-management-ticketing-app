@@ -1,3 +1,5 @@
+import db from "../database.js";
+
 class RsvpService {
   static async createRsvp({ userId, eventId, status }) {
     // Check if RSVP already exists

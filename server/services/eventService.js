@@ -59,30 +59,32 @@ class EventService {
         }
       }
 
-      // Insert into DISCOUNT_CODE
-      const discountQuery = `
+      if (discountCodes?.length > 0) {
+        // Insert into DISCOUNT_CODE
+        const discountQuery = `
         INSERT INTO DISCOUNT_CODE (Code, Amount, Max_Uses, User_ID) 
         VALUES (?, ?, ?, ?)
       `;
-      const ticketDiscountQuery = `
+        const ticketDiscountQuery = `
         INSERT INTO TICKET_DISCOUNT (Ticket_ID, Discount_Code) 
         VALUES (?, ?)
       `;
-      for (const discount of discountCodes) {
-        const [discountResult] = await connection.execute(discountQuery, [
-          discount.code,
-          discount.amount,
-          discount.maxUses,
-          organizerUserId, // NOTE: We will probably just get rid of the User_ID part for discount codes
-        ]);
-
-        // NOTE: This logic will also need to change, we might need to split up making an event and adding discounts so it's easier to choose which tickets the codes apply to
-        // Insert into TICKET_DISCOUNT
-        for (const ticketId of discount.ticketIds) {
-          await connection.execute(ticketDiscountQuery, [
-            ticketId,
+        for (const discount of discountCodes) {
+          const [discountResult] = await connection.execute(discountQuery, [
             discount.code,
+            discount.amount,
+            discount.maxUses,
+            organizerUserId, // NOTE: We will probably just get rid of the User_ID part for discount codes
           ]);
+
+          // NOTE: This logic will also need to change, we might need to split up making an event and adding discounts so it's easier to choose which tickets the codes apply to
+          // Insert into TICKET_DISCOUNT
+          for (const ticketId of discount.ticketIds) {
+            await connection.execute(ticketDiscountQuery, [
+              ticketId,
+              discount.code,
+            ]);
+          }
         }
       }
 

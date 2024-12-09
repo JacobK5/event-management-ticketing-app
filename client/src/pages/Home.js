@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Organizer_Home from "./Organizer_Home";
 import { getCurrentUser } from "../services/auth";
 import Organizer_Header from "../components/Organizer_Header";
+import PopulateSampleDataButton from "../components/PopulateSampleDataButton";
 
 const Home = () => {
   const [isOrganizer, setOrganizer] = useState(false);
@@ -34,6 +35,7 @@ const Home = () => {
         <div className="search-container">
           <SearchBar />
         </div>
+        <PopulateSampleDataButton />
       </main>
     </>
   );

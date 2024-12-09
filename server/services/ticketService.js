@@ -1,4 +1,16 @@
+import db from "../database.js";
+
 class TicketService {
+  static async getTicket(ticketId) {
+    const query = `
+      SELECT * 
+      FROM TICKET 
+      WHERE Ticket_ID = ?
+    `;
+    const [rows] = await db().execute(query, [ticketId]);
+    return rows[0];
+  }
+
   static async purchaseTicket({
     userId,
     ticketId,
@@ -8,6 +20,7 @@ class TicketService {
   }) {
     const connection = await db().getConnection();
     await connection.beginTransaction();
+    console.log("ticket id:", ticketId);
 
     try {
       // Validate discount code
@@ -75,6 +88,7 @@ class TicketService {
         SET Holder_UserID = ?, Pmt_Ref_Num = ? 
         WHERE Ticket_ID = ?
       `;
+      console.log("updating ticket with:", userId, paymentRefNum, ticketId);
       await connection.execute(updateTicketQuery, [
         userId,
         paymentRefNum,
@@ -99,6 +113,16 @@ class TicketService {
       `;
     await db().execute(listingQuery, [ticketId, price, userId]);
     return { message: "Ticket listed for resale" };
+  }
+
+  static async getResaleListingByTicketId(ticketId) {
+    const query = `
+      SELECT * 
+      FROM RESALE_LISTING 
+      WHERE Ticket_ID = ?
+    `;
+    const [rows] = await db().execute(query, [ticketId]);
+    return rows[0];
   }
 
   static async purchaseResaleTicket({

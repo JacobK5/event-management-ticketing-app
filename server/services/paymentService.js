@@ -1,3 +1,5 @@
+import db from "../database.js";
+
 class PaymentService {
   static async requestRefund({ refNum, status = "Pending" }) {
     const query = `
