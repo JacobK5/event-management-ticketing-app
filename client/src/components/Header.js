@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { isAuthenticated, logout } from "../services/auth";
 import { useLocation } from "react-router-dom";
-
+import "../styles/drop_menu.css"
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const loggedIn = isAuthenticated();
   const location = useLocation();
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
 
   const handleLogout = () => {
     logout();
@@ -67,13 +63,16 @@ const Header = () => {
         <div className="menu-right">
           {loggedIn ? (
             <div className="dropdown">
+
               <a href="#" className="dropbtn">
                 👤 Account{" "}
               </a>
+    
               <div className="dropdown-content">
                 <a href="/account">My Account</a>
                 <a onClick={handleLogout}>Logout</a>
               </div>
+
             </div>
           ) : (
             <a href="/login" className="menu-item sign-in">

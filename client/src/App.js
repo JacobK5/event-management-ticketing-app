@@ -12,6 +12,7 @@ import "./styles/style.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ViewEvents from "./pages/ViewEvents";
 import Account from "./pages/Account";
+import Edit_Account from "./pages/Edit_Account";
 import OrganizerEvents from "./pages/OrganizerEvents";
 
 const App = () => {
@@ -30,7 +31,8 @@ const App = () => {
         <Route path="/discounts/create" element={<Create_Discount />} />
         <Route path="/account" element={<Account />} />
         <Route path="/my-events" element={<OrganizerEvents />} />
-        {/* <Route path="/events/edit/:id" element=(<EditEvent />) /> will be used to edit events when Kevin adds it*/}
+        <Route path="/edit-account" element={<Edit_Account />} />
+        {/* <Route path="/events/edit/:id" element=(<EditEvent />) /> will be used to edit events when Kevin adds it */}
       </Routes>
     </Router>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import O_Header from "../components/Organizer_Header";
+import Header from "../components/Header";
 import apiRequest from "../services/api";
 import { getCurrentUser } from "../services/auth";
 
@@ -86,7 +86,7 @@ const Create_Event = () => {
 
   return (
     <>
-    <O_Header/>
+    <Header/>
     <main className="center-content">
       <div>
         <h2 className="form_title">Create Event</h2>
