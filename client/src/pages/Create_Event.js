@@ -71,6 +71,7 @@ const Create_Event = () => {
   };
 
   const handleSubmit = async (event) => {
+    console.log('current user:', getCurrentUser());
     event.preventDefault();
     const eventDetails = {
       ...formData,
@@ -78,6 +79,7 @@ const Create_Event = () => {
       tickets: ticketTiers,
       discountCodes: discountCodes,
     };
+    console.log("eventDetails:", eventDetails);
 
     try {
       const response = await apiRequest("POST", "/events", eventDetails);

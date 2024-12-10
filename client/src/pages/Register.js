@@ -50,8 +50,9 @@ const Register = () => {
 
       if (response.status === 201) {
         console.log("registured successfully");
+        console.log('response.data:', response.data);
         // Log in the user
-        login(response.data);
+        login(response.data.userId);
         // Redirect to the home page
         window.location.href = "/";
       } else {

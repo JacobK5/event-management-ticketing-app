@@ -20,7 +20,8 @@ class EventService {
       const eventQuery = `
         INSERT INTO EVENT (EventID, Time, Location_Name, Location_Address, Date, Description, Organizer_UserID) 
         VALUES (?, ?, ?, ?, ?, ?, ?)
-      `;
+        `;
+        console.log('creating event with:', name, time, locationName, locationAddress, date, description, organizerUserId, categories, tickets, discountCodes);
       const [eventResult] = await connection.execute(eventQuery, [
         name,
         time,
@@ -31,6 +32,7 @@ class EventService {
         organizerUserId,
       ]);
       const eventId = name;
+
 
       // Insert into EVENT_CATEGORIES for each category
       const categoryQuery = `

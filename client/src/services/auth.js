@@ -2,6 +2,7 @@ const CURRENT_USER_KEY = "currentUser";
 
 export const login = (user) => {
   // Save user data to localStorage to keep them logged in
+  console.log('login user in and saving:', user);
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
 };
 
