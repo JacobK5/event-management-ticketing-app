@@ -76,6 +76,15 @@ class EventController {
     }
   }
 
+  static async getTicketSummary(req, res) {
+    try {
+      const ticketSummary = await EventService.getTicketSummary(req.params.id);
+      return res.status(200).json(ticketSummary);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
   static async getResaleTickets(req, res) {
     try {
       const resaleTickets = await EventService.getResaleTickets(req.params.id);

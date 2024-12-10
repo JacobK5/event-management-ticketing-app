@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/EventCard.css";
 import { getCurrentUser } from "../services/auth";
+import apiRequest from "../services/api";
 
 const EventCard = ({ event }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   console.log("event:", event);
+
+  // I'll leave this here in case this is where you wanna use it
+  // useEffect(async () => {
+  //   const response = await apiRequest(
+  //     "GET",
+  //     `events/${event.EventID}/tickets/summary`
+  //   );
+  //   console.log("tickets summary response:", response);
+  // }, []);
 
   // Determine if the event is free based on ticket price
   const isFreeEvent = event.isPaid === 0;
