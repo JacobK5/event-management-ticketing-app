@@ -108,6 +108,7 @@ const Payment = () => {
               {ticket.data.map((ticket) => (
                 <option value={ticket.Price}>{ticket.Tier}</option>
               ))};
+              <option value="5.00">Resale Listing</option> make value equal to resale listing of lowest preice after getting list of resales
               
             </select>
           </label>
