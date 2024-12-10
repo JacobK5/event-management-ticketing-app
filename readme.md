@@ -1,0 +1,1 @@
+Run npm run dev in /server to start the server and npm start in /client to start the client
