@@ -9,6 +9,8 @@ const Payment = () => {
   const user = getCurrentUser(); //getting userid
   const [event, setEvent] = useState([]);
   const [ticket, setTicket] = useState([]);
+  const [discount, setDiscount] = useState([]);
+  const [resale, setResale] = useState([]);
   const [tier, setTier] = useState([]); 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,14 +32,25 @@ const Payment = () => {
           "GET",
           `/events/${id}`
         );
-        console.log("info:", eventInfo.data);
+
+        const resaleInfo = await apiRequest(
+          "GET",
+          `/events/${id}/resale-tickets`
+        );
+        console.log("resale:", resaleInfo.data);
         
         const response = await apiRequest(
           "GET",
           `events/${id}/tickets/summary`
         );
-        console.log("tickets summary response:", response);
 
+        const discountInfo = await apiRequest(
+          "GET",
+          `events/${id}/discounts`
+        );
+        console.log("discount:", discountInfo);
+        console.log("tickets summary response:", response);
+        setResale(resaleInfo.data);
         setEvent(eventInfo.data); 
         setTicket(response.data);
         // setTicketTiers(event.ticket);
@@ -80,6 +93,17 @@ const Payment = () => {
     day: "numeric",
   });
 
+  const handleDiscount = (discAmt,price) => {
+    discAmt ="$5.00";
+      if (discAmt[0]=='$'){
+        setTier(parseFloat(price)-parseFloat(discAmt.replace("$", "")));
+      } else {
+        percent_string= discAmt.replace("%", "");
+        percent = parseFloat(percent_string)/100;
+        setTier(parseFloat(price)*(1-percent));
+      }
+    };
+  
   return (
     <>
     <Header/>
@@ -105,11 +129,15 @@ const Payment = () => {
                 -- Select a Tier --
               </option>
               {/* insert map for each ticket tier */}
-              {
+              {/* {
                 ticket.map((ticket) => (
                 <option value={ticket.Price}>{ticket.Tier}</option>
+              ))}; */}
+              {
+                resale.map((resale) => (
+                <option value={resale.Resale_Price}>Resale Listing </option>
               ))};
-              <option value="5.00">Resale Listing</option> make value equal to resale listing of lowest preice after getting list of resales
+             
               
             </select>
           </label>
@@ -125,6 +153,7 @@ const Payment = () => {
               value={formData.locationAddress}
               onChange={handleInputChange}
             />
+            <button onClick={handleDiscount}>  Check </button>
           </label>
 
           <label className="input_title">
