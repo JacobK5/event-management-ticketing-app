@@ -41,21 +41,22 @@ class EventService {
         await connection.execute(categoryQuery, [eventId, category]);
       }
 
-      // NOTE: How this works will change for actual implementation (probably use some kind of object with price, tier, details, and number and we will just loop that many times to make all the tickets), for now this is good enough since we just need the query
       // Insert into TICKET
       const ticketQuery = `
         INSERT INTO TICKET (Price, Tier, Details, Event_ID) 
         VALUES (?, ?, ?, ?)
       `;
+      const ticketIds = [];
       for (const ticket of tickets) {
         // probably need to track ids of all tickets so we can associate discount codes with them
         for (let i = 0; i < ticket.quantity; i++) {
-          await connection.execute(ticketQuery, [
+          const [ticketResult] = await connection.execute(ticketQuery, [
             ticket.price,
             ticket.tier,
             ticket.details,
             eventId,
           ]);
+          ticketIds.push(ticketResult.insertId);
         }
       }
 
@@ -74,12 +75,11 @@ class EventService {
             discount.code,
             discount.amount,
             discount.maxUses,
-            organizerUserId, // NOTE: We will probably just get rid of the User_ID part for discount codes
+            organizerUserId,
           ]);
 
-          // NOTE: This logic will also need to change, we might need to split up making an event and adding discounts so it's easier to choose which tickets the codes apply to
           // Insert into TICKET_DISCOUNT
-          for (const ticketId of discount.ticketIds) {
+          for (const ticketId of ticketIds) {
             await connection.execute(ticketDiscountQuery, [
               ticketId,
               discount.code,
@@ -387,6 +387,24 @@ class EventService {
     `;
     const [rows] = await db().execute(query, [eventId]);
     return rows;
+  }
+
+  static async getDiscounts(eventId) {
+    const query = `
+    SELECT d.Code, d.Amount, d.Max_Uses, d.Current_Uses
+    FROM DISCOUNT_CODE d
+    WHERE EXISTS (
+      SELECT 1
+      FROM TICKET_DISCOUNT td
+      JOIN TICKET t ON td.Ticket_ID = t.Ticket_ID
+      WHERE t.Event_ID = ? AND td.Discount_Code = d.Code
+      LIMIT 1
+    )
+  `;
+
+    const [discounts] = await db().execute(query, [eventId]);
+
+    return discounts;
   }
 }
 

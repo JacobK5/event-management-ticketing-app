@@ -93,6 +93,15 @@ class EventController {
       return res.status(500).json({ error: error.message });
     }
   }
+
+  static async getDiscounts(req, res) {
+    try {
+      const discounts = await EventService.getDiscounts(req.params.id);
+      return res.status(200).json(discounts);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 export default EventController;

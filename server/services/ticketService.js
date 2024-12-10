@@ -24,7 +24,6 @@ class TicketService {
 
     try {
       // Validate discount code
-      let discountAmount = 0;
       if (discountCode) {
         const discountQuery = `
           SELECT Amount, Max_Uses, Current_Uses 
@@ -65,9 +64,6 @@ class TicketService {
           WHERE Code = ?
         `;
         await connection.execute(updateDiscountQuery, [discountCode]);
-
-        // NOTE: will work out actual logic for this later (if needed)
-        discountAmount = discount.Amount;
       }
 
       // Insert payment record
