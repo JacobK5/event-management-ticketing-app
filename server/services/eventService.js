@@ -363,6 +363,19 @@ class EventService {
     return rows;
   }
 
+  static async getTicketSummary(eventId) {
+    const query = `
+    SELECT t.Price, t.Tier, t.Details, COUNT(*) AS quantity, CAST(SUM(CASE WHEN t.Holder_UserID IS NOT NULL THEN 1 ELSE 0 END) AS UNSIGNED) AS soldQuantity
+    FROM TICKET t
+    WHERE t.Event_ID = ?
+    GROUP BY t.Price, t.Tier, t.Details
+  `;
+
+    const [rows] = await db().execute(query, [eventId]);
+
+    return rows;
+  }
+
   static async getResaleTickets(eventId) {
     // Get resale listings for this event
     const query = `
