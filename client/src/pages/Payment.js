@@ -34,12 +34,12 @@ const Payment = () => {
         
         const response = await apiRequest(
           "GET",
-          `events/${id}/tickets`
+          `events/${id}/tickets/summary`
         );
         console.log("tickets summary response:", response);
 
         setEvent(eventInfo.data); 
-        setTicket(response);
+        setTicket(response.data);
         // setTicketTiers(event.ticket);
       } catch (error) {
         console.error("Error fetching Account:", error);
@@ -105,9 +105,11 @@ const Payment = () => {
                 -- Select a Tier --
               </option>
               {/* insert map for each ticket tier */}
-              {ticket.data.map((ticket) => (
+              {
+                ticket.map((ticket) => (
                 <option value={ticket.Price}>{ticket.Tier}</option>
               ))};
+              <option value="5.00">Resale Listing</option> make value equal to resale listing of lowest preice after getting list of resales
               
             </select>
           </label>
