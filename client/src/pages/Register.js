@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import makeRequest from "../services/api";
 import { login } from "../services/auth";
 import Header from "../components/Header";
-import '../styles/form.css';
+import "../styles/form.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -65,11 +65,11 @@ const Register = () => {
 
   return (
     <>
-    <Header/>
-    <main classNames="center-content">
-      {/* Form to fill in user details */}
-      <form className="register_box" onSubmit={handleSubmit}>
-        <h2 className="form_title">Create Account</h2>
+      <Header />
+      <main classNames="center-content">
+        {/* Form to fill in user details */}
+        <form className="register_box" onSubmit={handleSubmit}>
+          <h2 className="form_title">Create Account</h2>
           <label className="input_title">
             First Name:
             <input
@@ -99,17 +99,6 @@ const Register = () => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className="input_title">
-            Username:
-            <input
-              className="form-group"
-              type="text"
-              name="username"
-              value={formData.username}
               onChange={handleInputChange}
               required
             />
@@ -185,17 +174,15 @@ const Register = () => {
               />
             )}
           </label>
-          <button className="submit" type="submit">Submit</button>
+          <button className="submit" type="submit">
+            Submit
+          </button>
           {/* creates account and logs user in according to what account type they chose */}
-          
 
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      </form>
-      
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        </form>
       </main>
     </>
-      
-
   );
 };
 

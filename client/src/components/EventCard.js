@@ -7,14 +7,26 @@ const EventCard = ({ event }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   console.log("event:", event);
 
-  // I'll leave this here in case this is where you wanna use it
-  // useEffect(async () => {
-  //   const response = await apiRequest(
-  //     "GET",
-  //     `events/${event.EventID}/tickets/summary`
-  //   );
-  //   console.log("tickets summary response:", response);
-  // }, []);
+  //I'll leave this here in case this is where you wanna use it
+  useEffect(() => {
+    const fetchTicketsSummary = async () => {
+      const response = await apiRequest(
+        "GET",
+        `events/${event.EventID}/tickets/summary`
+      );
+      console.log("tickets summary response:", response);
+    };
+    const fetchDiscounts = async () => {
+      const response = await apiRequest(
+        "GET",
+        `events/${event.EventID}/discounts`
+      );
+      console.log("discounts response:", response);
+    };
+
+    fetchTicketsSummary();
+    fetchDiscounts();
+  }, []);
 
   // Determine if the event is free based on ticket price
   const isFreeEvent = event.isPaid === 0;

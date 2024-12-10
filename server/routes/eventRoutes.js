@@ -13,5 +13,6 @@ router.delete("/:id", EventController.deleteEvent);
 router.get("/:id/tickets", EventController.getAvailableTickets);
 router.get("/:id/tickets/summary", EventController.getTicketSummary);
 router.get("/:id/resale-tickets", EventController.getResaleTickets);
+router.get("/:id/discounts", EventController.getDiscounts);
 
 export default router;
