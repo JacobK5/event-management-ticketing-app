@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import apiRequest from "../services/api"; // Helper function for API calls
 import { getCurrentUser } from "../services/auth";
+import "../styles/Account.css"
 
 const Account = () => {
   const [tickets, setTickets] = useState([]);
