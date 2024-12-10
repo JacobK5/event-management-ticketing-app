@@ -5,6 +5,7 @@ import apiRequest from "../services/api";
 
 const EventCard = ({ event }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [rsvpStatus, setRsvp] = useState([]);
   console.log("event:", event);
 
   //I'll leave this here in case this is where you wanna use it
@@ -16,6 +17,7 @@ const EventCard = ({ event }) => {
       );
       console.log("tickets summary response:", response);
     };
+    
     const fetchDiscounts = async () => {
       const response = await apiRequest(
         "GET",
@@ -60,6 +62,13 @@ const EventCard = ({ event }) => {
     setIsPopupVisible(false);
   };
 
+  const handleRSVP = async(event) => {
+    event.preventDefault();
+    const response = await apiRequest("POST", "/rsvps", rsvpStatus);
+    console.log("Event created successfully:", response);
+    alert("Response Sent!");
+  }
+
   return (
     <div>
       {/* Event Card */}
@@ -102,7 +111,14 @@ const EventCard = ({ event }) => {
                   <button className="popup-btn">Resale Options</button>
                 </>
               )}
-              {isFreeEvent && !userIsOrganizer && <button className="popup-btn">RSVP</button>}
+              {isFreeEvent && !userIsOrganizer && 
+              <div>
+                <button className="popup-btn" onClick={handleRSVP}>Not Going</button>
+                <button className="popup-btn" onClick={handleRSVP}>Interested</button>
+                <button className="popup-btn"onClick={handleRSVP}>Going</button>
+              </div>
+                
+              }
             </div>
             {userIsOrganizer && (
               <button
