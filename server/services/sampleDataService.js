@@ -115,6 +115,18 @@ class SampleDataService {
             },
             { price: 100, tier: "VIP", details: "VIP seating", quantity: 10 },
           ],
+          discountCodes: [
+            {
+              code: `${category}10`,
+              amount: "10%",
+              maxUses: 10,
+            },
+            {
+              code: `${category}5`,
+              amount: "$5",
+              maxUses: 10,
+            },
+          ],
         });
         paidEventIds.push(paidEvent); // Track paid event IDs
       }
