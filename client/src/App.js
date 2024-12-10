@@ -15,6 +15,7 @@ import ViewEvents from "./pages/ViewEvents";
 import Account from "./pages/Account";
 import Edit_Account from "./pages/Edit_Account";
 import OrganizerEvents from "./pages/OrganizerEvents";
+import Payment from "./pages/Payment";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/events/create" element={<Create_Event />} />
+        <Route path="/events/payment/:id" element={<Payment />} />
         <Route path="/events/view/:category?" element={<ViewEvents />} />
         <Route
           path="/events/view/search/:searchTerm"

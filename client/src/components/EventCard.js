@@ -85,7 +85,8 @@ const EventCard = ({ event }) => {
             <div className="popup-buttons">
               {!isFreeEvent && (
                 <>
-                  <button className="popup-btn">Purchase Ticket</button>
+                  <button onClick={() => (window.location.href = `/events/payment/${event.EventID}`)} className="popup-btn">
+                      Purchase Ticket</button>
                   <button className="popup-btn">Resale Options</button>
                 </>
               )}
