@@ -9,18 +9,19 @@ const Payment = () => {
   const user = getCurrentUser(); //getting userid
   const [event, setEvent] = useState([]);
   const [ticket, setTicket] = useState([]);
+  const [allTickets, setAllTickets] = useState([]);
   const [discount, setDiscount] = useState([]);
   const [resale, setResale] = useState([]);
-  const [tier, setTier] = useState([]); 
+  const [price, setPrice] = useState([]); 
+  const [discountUsed, setDiscountUsed] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    locationName: "",
-    locationAddress: "",
-    date: "",
-    time: "",
-    type: "",
-    description: "",
-    categories: [],
+    method: '',
+    creditCardInfo: '',
+    creditCardNumber: '',
+    creditCardExpiry: '',
+    creditCardCVV: '',
+    discountCode: '',
+    tier: ''
   });
 
   useEffect(() => {
@@ -43,6 +44,12 @@ const Payment = () => {
           "GET",
           `events/${id}/tickets/summary`
         );
+        const allTickets = await apiRequest(
+          "GET",
+          `events/${id}/tickets`
+        );
+        console.log("all tickets:", allTickets);
+        setAllTickets(allTickets.data);
 
         const discountInfo = await apiRequest(
           "GET",
@@ -53,6 +60,7 @@ const Payment = () => {
         setResale(resaleInfo.data);
         setEvent(eventInfo.data); 
         setTicket(response.data);
+        setDiscount(discountInfo.data);
         // setTicketTiers(event.ticket);
       } catch (error) {
         console.error("Error fetching Account:", error);
@@ -69,20 +77,28 @@ const Payment = () => {
   };
 
   const handleSubmit = async (event) => {
+    console.log('current user:', getCurrentUser());
+    console.log('formData:', formData);
+    // find ticket with selected tier
+    const ticketTier = allTickets.find((ticket) => ticket.Tier === formData.tier);
+    console.log('ticketTier:', ticketTier);
+
     event.preventDefault();
-    const eventDetails = {
+    const details = {
       ...formData,
-      organizerUserId: getCurrentUser().UserID,
-      tickets: ticketTiers,
-      discountCodes: [], // empty for now, will add later
+      userId: getCurrentUser().UserID,
+      ticketId: ticketTier.Ticket_ID,
+      creditCardInfo: formData.creditCardNumber + "-" + formData.creditCardExpiry + "-" + formData.creditCardCVV,
     };
 
+    console.log("details:", details);
+
     try {
-      const response = await apiRequest("POST", "/events", eventDetails);
-      console.log("Event created successfully:", response);
+      const response = await apiRequest("POST", "/tickets/purchase", details);
+      console.log("Ticket bought successfully:", response);
       window.location.href = "/"; // will update to redirect to the event page for the newly created event
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error("Error buying ticket:", error);
     }
   };
 
@@ -93,15 +109,32 @@ const Payment = () => {
     day: "numeric",
   });
 
-  const handleDiscount = (discAmt,price) => {
-    discAmt ="$5.00";
-      if (discAmt[0]=='$'){
-        setTier(parseFloat(price)-parseFloat(discAmt.replace("$", "")));
-      } else {
-        percent_string= discAmt.replace("%", "");
-        percent = parseFloat(percent_string)/100;
-        setTier(parseFloat(price)*(1-percent));
+  const handleDiscount = () => {
+    if(discountUsed){
+      alert("Discount Code already used");
+      return
+    }
+    console.log('discount:', discount);
+    console.log('discount:', discount[0]);
+    console.log('formData:', formData.discountCode);
+      const discAmt = discount.find((disc) => disc.Code === formData.discountCode)?.Amount;
+      console.log('discount:', discAmt);
+      if (!discAmt){
+        alert("Invalid Discount Code");
+        return
       }
+      if (discAmt[0]=='$'){
+        setPrice(parseFloat(price)-parseFloat(discAmt.replace("$", "")));
+      } else {
+        const percent_string= discAmt.replace("%", "");
+        const percent = parseFloat(percent_string)/100;
+        setPrice(parseFloat(price)*(1-percent));
+        console.log('percent:', percent);
+        console.log('precent:', percent_string); 
+        console.log('price:', price);
+        console.log('price:', price*(1-percent))
+      }
+      setDiscountUsed(true);
     };
   
   return (
@@ -121,18 +154,25 @@ const Payment = () => {
               className="form-group"
               id="ticketTier"
               name="ticket"
-              value={tier}
-              onChange= {(e) => setTier(e.target.value)}
+              value={price}
+              onChange= {(e) => {
+                setPrice(e.target.value)
+                setDiscountUsed(false)
+                console.log('e.target.value:', e.target)
+                // find tier
+                const tier = ticket.find((ticket) => ticket.Price === e.target.value)?.Tier
+                console.log('tier:', tier);
+                setFormData({...formData, tier: tier})
+                }}
               required
             >
               <option value="" disabled>
                 -- Select a Tier --
               </option>
-              {/* insert map for each ticket tier */}
-              {/* {
+              {
                 ticket.map((ticket) => (
                 <option value={ticket.Price}>{ticket.Tier}</option>
-              ))}; */}
+              ))};
               {
                 resale.map((resale) => (
                 <option value={resale.Resale_Price}>Resale Listing </option>
@@ -142,15 +182,15 @@ const Payment = () => {
             </select>
           </label>
           <label className="form-group input_title">
-            Price: {tier} 
+            Price: {price} 
           </label>
           <label className="input_title">
             Discount Code:
             <input
               className="form-group"
               type="text"
-              name="locationAddress"
-              value={formData.locationAddress}
+              name="discountCode"
+              value={formData.discountCode}
               onChange={handleInputChange}
             />
             <button onClick={handleDiscount}>  Check </button>
@@ -163,17 +203,17 @@ const Payment = () => {
               style={{marginRight:'10px'}}
               type="checkbox"
               name="method"
-              value={formData.locationName}
+              value={formData.method}
               onChange={handleInputChange}
-              required
+              
             />
             Visa <input
               className="form-group"
               type="checkbox"
               name="method"
-              value={formData.locationName}
+              value={formData.method}
               onChange={handleInputChange}
-              required
+              
             />
           </label>
 
@@ -182,8 +222,8 @@ const Payment = () => {
             <input
               className="form-group"
               type="text"
-              name="locationAddress"
-              value={formData.locationAddress}
+              name="creditCardNumber"
+              value={formData.creditCardNumber}
               onChange={handleInputChange}
               required
             />
@@ -195,8 +235,8 @@ const Payment = () => {
               className="form-group"
               style={{width:'10%'}}
               type="text"
-              name="locationAddress"
-              value={formData.locationAddress}
+              name="creditCardExpiry"
+              value={formData.creditCardExpiry}
               onChange={handleInputChange}
               required
             /> 
@@ -205,8 +245,8 @@ const Payment = () => {
               className="form-group"
               style={{width:'10%'}}
               type="text"
-              name="locationAddress"
-              value={formData.locationAddress}
+              name="creditCardCVV"
+              value={formData.creditCardCVV}
               onChange={handleInputChange}
               required
             />
