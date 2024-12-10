@@ -95,14 +95,14 @@ const EventCard = ({ event }) => {
             <p className="popup-description">{event.Description}</p>{" "}
             {/* Display description */}
             <div className="popup-buttons">
-              {!isFreeEvent && (
+              {!isFreeEvent && !userIsOrganizer && (
                 <>
                   <button onClick={() => (window.location.href = `/events/payment/${event.EventID}`)} className="popup-btn">
                       Purchase Ticket</button>
                   <button className="popup-btn">Resale Options</button>
                 </>
               )}
-              {isFreeEvent && <button className="popup-btn">RSVP</button>}
+              {isFreeEvent && !userIsOrganizer && <button className="popup-btn">RSVP</button>}
             </div>
             {userIsOrganizer && (
               <button
