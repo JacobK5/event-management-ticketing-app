@@ -78,7 +78,7 @@ class UserService {
     // Get the user's profile information
     const query = `
       SELECT 
-        u.UserID, u.Fname, u.Lname, u.Email, u.Phone_number, u.DOB, 
+        u.UserID, u.Fname, u.Lname, u.Email, u.Phone_number, u.DOB, u.Password, 
         o.Organizer_SSN 
       FROM USER u 
       LEFT JOIN ORGANIZER o ON u.UserID = o.UserID 
@@ -93,7 +93,7 @@ class UserService {
     // Update the user's profile information
     const query = `
       UPDATE USER 
-      SET Fname = ?, Lname = ?, Email = ?, Phone_number = ?, DOB = ?
+      SET Fname = ?, Lname = ?, Email = ?, Phone_number = ?, Password = ?
       WHERE UserID = ?
     `;
 
@@ -101,8 +101,8 @@ class UserService {
       updates.fname,
       updates.lname,
       updates.email,
-      updates.phone_number,
-      updates.dob,
+      updates.phoneNumber,
+      updates.password,
       userId,
     ]);
 

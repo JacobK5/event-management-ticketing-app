@@ -21,7 +21,7 @@ class UserController {
       const userId = await UserService.createUser(req.body);
 
       if (userId) {
-        return res.status(201).json({ userId });
+        return res.status(201).json(userId);
       } else {
         return res
           .status(409)

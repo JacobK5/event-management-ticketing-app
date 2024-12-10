@@ -7,27 +7,8 @@ import { getCurrentUser } from "../services/auth";
 import '../styles/form.css';
 
 const Edit_Account = () => {
-  const [account, setAccount] = useState([]);
+  const [account, setAccount] = useState(null);
   const user = getCurrentUser();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log("user:", user);
-        const userProfile = await apiRequest(
-          "GET",
-          `users/profile/${user.UserID}`
-        );
-        console.log("userprofile:", userProfile);
-        setAccount(userProfile.data);
-      } catch (error) {
-        console.error("Error fetching Account:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-  
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -39,6 +20,33 @@ const Edit_Account = () => {
     accountType: "",
     organizerSSN: "",
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        console.log("user:", user);
+        const userProfile = await apiRequest(
+          "GET",
+          `users/profile/${user.UserID}`
+        );
+        console.log("userprofile:", userProfile);
+        setAccount(userProfile.data);
+        setFormData({
+          fname: userProfile.data.Fname,
+          lname: userProfile.data.Lname,
+          email: userProfile.data.Email,
+          phoneNumber: userProfile.data.Phone_number,
+          password: userProfile.data.Password,
+          dob: userProfile.data.DOB,
+        });
+      } catch (error) {
+        console.error("Error fetching Account:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleInputChange = (event) => {
@@ -56,13 +64,11 @@ const Edit_Account = () => {
     console.log("submitting data:", formData);
 
     try {
-      const response = await makeRequest("POST",  `users/profile/${user.UserID}`, formData);
+      const response = await makeRequest("PUT",  `users/profile/${user.UserID}`, formData);
       console.log("response:", response);
 
-      if (response.status === 201) {
-        console.log("registured successfully");
-        // Log in the user
-        login(response.data);
+      if (response.status === 200) {
+        console.log("updated successfully");
         // Redirect to the home page
         window.location.href = "/";
       } else {
@@ -73,6 +79,8 @@ const Edit_Account = () => {
       console.error("Error:", error);
     }
   };
+  console.log("account:", account);
+  
 
   return (
     <>
@@ -83,7 +91,7 @@ const Edit_Account = () => {
         <h2 className="form_title">Edit Account</h2>
        
           <label className="input_title" >
-            Set First Name: {user.Fname} | New First Name: 
+            Set First Name: {account?.Fname} | New First Name: 
             <input
               className="form-group"
               type="text"
@@ -94,7 +102,7 @@ const Edit_Account = () => {
           </label>
 
           <label className="input_title">
-            Set Last Name: {user.Lname} | New Last Name: 
+            Set Last Name: {account?.Lname} | New Last Name: 
             <input
               className="form-group"
               type="text"
@@ -104,7 +112,7 @@ const Edit_Account = () => {
             />
           </label>
           <label className="input_title">
-            Set Email: {user.Email} | New Email: 
+            Set Email: {account?.Email} | New Email: 
             <input
               className="form-group"
               type="email"
@@ -116,7 +124,7 @@ const Edit_Account = () => {
           </label>
 
           <label className="input_title">
-            Set Password: ********* | New Password: 
+            Set Password: {account?.Password.split('').map(() => '*')} | New Password: 
             <input
               className="form-group"
               type="password"
@@ -127,7 +135,7 @@ const Edit_Account = () => {
             />
           </label>
           <label className="input_title">
-            Set Phone Number: {user.Phone_number} | New Phone Number: 
+            Set Phone Number: {account?.Phone_number} | New Phone Number: 
             <input
               className="form-group"
               type="text"
@@ -138,7 +146,12 @@ const Edit_Account = () => {
             />
           </label>
           <label className="input_title">
-            Date of Birth: {user.DOB} 
+            Date of Birth: {
+            new Date(account?.DOB ?? new Date()).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })} 
           </label>
           <button className="submit" type="submit">Submit</button>
           {/* creates account and logs user in according to what account type they chose */}

@@ -52,7 +52,7 @@ const Register = () => {
         console.log("registured successfully");
         console.log('response.data:', response.data);
         // Log in the user
-        login(response.data.userId);
+        login(response.data);
         // Redirect to the home page
         window.location.href = "/";
       } else {
