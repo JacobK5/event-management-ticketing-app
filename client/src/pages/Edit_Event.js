@@ -44,14 +44,14 @@ const Edit_Event = () => {
 
         const existingTicketTiers = await apiRequest(
           "GET",
-          `/events/${id}/tickets/summary`
+          `events/${id}/tickets/summary`
         );
         console.log("tickets summary response:", existingTicketTiers);
         setExistingTicketTiers(existingTicketTiers.data);
 
         const existingDiscountCodes = await apiRequest(
           "GET",
-          `/events/${id}/discounts`
+          `events/${id}/discounts`
         );
         console.log("discounts response:", existingDiscountCodes);
         setExistingDiscountCodes(existingDiscountCodes.data);
