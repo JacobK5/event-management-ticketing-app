@@ -245,7 +245,16 @@ class EventService {
 
   static async editEvent(
     eventId,
-    { time, locationName, locationAddress, date, description, categories }
+    {
+      time,
+      locationName,
+      locationAddress,
+      date,
+      description,
+      categories,
+      tickets,
+      discountCodes,
+    }
   ) {
     const connection = await db().getConnection();
     await connection.beginTransaction();
@@ -282,9 +291,64 @@ class EventService {
         await connection.execute(categoryQuery, [eventId, category]);
       }
 
+      // Insert new tickets
+      const ticketQuery = `
+        INSERT INTO TICKET (Price, Tier, Details, Event_ID) 
+        VALUES (?, ?, ?, ?)
+      `;
+      for (const ticket of tickets) {
+        for (let i = 0; i < ticket.quantity; i++) {
+          const [ticketResult] = await connection.execute(ticketQuery, [
+            ticket.price,
+            ticket.tier,
+            ticket.details,
+            eventId,
+          ]);
+        }
+      }
+
+      if (discountCodes?.length > 0) {
+        // Get all tickets for this event
+        const ticketQuery = `
+        SELECT Ticket_ID
+        FROM TICKET
+        WHERE Event_ID = ?
+      `;
+        const [ticketRows] = await connection.execute(ticketQuery, [eventId]);
+        const ticketIds = ticketRows.map((row) => row.Ticket_ID);
+
+        // Insert into DISCOUNT_CODE
+        const discountQuery = `
+        INSERT INTO DISCOUNT_CODE (Code, Amount, Max_Uses, User_ID)
+        VALUES (?, ?, ?, ?)
+      `;
+        const ticketDiscountQuery = `
+        INSERT INTO TICKET_DISCOUNT (Ticket_ID, Discount_Code)
+        VALUES (?, ?)
+      `;
+        for (const discount of discountCodes) {
+          const [discountResult] = await connection.execute(discountQuery, [
+            discount.code,
+            discount.amount,
+            discount.maxUses,
+            discount.organizerUserId,
+          ]);
+
+          // Insert into TICKET_DISCOUNT
+          for (const ticketId of ticketIds) {
+            await connection.execute(ticketDiscountQuery, [
+              ticketId,
+              discount.code,
+            ]);
+          }
+        }
+      }
+
       await connection.commit();
+      console.log("event updated successfully");
       return { message: "Event updated successfully" };
     } catch (error) {
+      console.log("error editing event:", error);
       await connection.rollback();
       throw error;
     } finally {
