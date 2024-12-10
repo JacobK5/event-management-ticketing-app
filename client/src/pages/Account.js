@@ -97,7 +97,7 @@ const Account = () => {
   return (
     <div>
       <Header />
-      <main>
+      <main className="account-page">
         <h1>My Account</h1>
 
         {loading && <p>Loading...</p>}

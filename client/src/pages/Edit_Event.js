@@ -10,6 +10,8 @@ const Edit_Event = () => {
   const [event, setEvent] = useState([]); // State to store event
   const [ticketTiers, setTicketTiers] = useState([]);
   const [discountCodes, setDiscountCodes] = useState([]);
+  const [existingTicketTiers, setExistingTicketTiers] = useState([]);
+  const [existingDiscountCodes, setExistingDiscountCodes] = useState([]);
 
   const [showTicketInput, setShowTicketInput] = useState(false);
   const [formData, setFormData] = useState({
@@ -39,6 +41,20 @@ const Edit_Event = () => {
           description: eventInfo.data.Description,
           categories: eventInfo.data.categories,
         });
+
+        const existingTicketTiers = await apiRequest(
+          "GET",
+          `events/${id}/tickets/summary`
+        );
+        console.log("tickets summary response:", existingTicketTiers);
+        setExistingTicketTiers(existingTicketTiers.data);
+
+        const existingDiscountCodes = await apiRequest(
+          "GET",
+          `events/${id}/discounts`
+        );
+        console.log("discounts response:", existingDiscountCodes);
+        setExistingDiscountCodes(existingDiscountCodes.data);
       } catch (error) {
         console.error("Error fetching Account:", error);
       }
@@ -225,8 +241,30 @@ const Edit_Event = () => {
               <option value="ticket">Ticket</option>
             </select>
           </label> */}
-
+            
             <>
+            <div>
+              <label className="input_title">
+                Current Ticket Tiers:
+              </label>
+              {existingTicketTiers.map((tier) => (
+                <div>
+
+                  <label className="input_title">
+                    Tier: {tier.Tier}
+                  </label>
+                  <label className="input_title">
+                    {' '}Price: {tier.Price}
+                  </label>
+                  <label className="input_title"> 
+                    {' '}Quantity: {tier.quantity}
+                  </label>
+                  <label className="input_title">
+                    {' '}Details: {tier.Details}
+                  </label>
+            </div>
+              ))}
+            </div>
               <div>
                 <button
                   type="button"
@@ -287,6 +325,24 @@ const Edit_Event = () => {
                     >
                       -
                     </button>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <label className="input_title">
+                  Current Discount Codes:
+                </label>
+                {existingDiscountCodes.map((tier) => (
+                  <div>
+                    <label className="input_title">
+                      Discount Code: {tier.Code}
+                    </label>
+                    <label className="input_title">
+                      {' '}Max Uses: {tier.MaxUses}
+                    </label>
+                    <label className="input_title">
+                      {' '}Discount Amount: {tier.Amount}
+                    </label>
                   </div>
                 ))}
               </div>
