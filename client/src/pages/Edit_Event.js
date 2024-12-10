@@ -244,22 +244,22 @@ const Edit_Event = () => {
             
             <>
             <div>
-              <label>
+              <label className="input_title">
                 Current Ticket Tiers:
               </label>
               {existingTicketTiers.map((tier) => (
                 <div>
 
-                  <label>
+                  <label className="input_title">
                     Tier: {tier.Tier}
                   </label>
-                  <label>
+                  <label className="input_title">
                     {' '}Price: {tier.Price}
                   </label>
-                  <label> 
+                  <label className="input_title"> 
                     {' '}Quantity: {tier.quantity}
                   </label>
-                  <label>
+                  <label className="input_title">
                     {' '}Details: {tier.Details}
                   </label>
             </div>
@@ -334,13 +334,13 @@ const Edit_Event = () => {
                 </label>
                 {existingDiscountCodes.map((tier) => (
                   <div>
-                    <label>
+                    <label className="input_title">
                       Discount Code: {tier.Code}
                     </label>
-                    <label>
+                    <label className="input_title">
                       {' '}Max Uses: {tier.MaxUses}
                     </label>
-                    <label>
+                    <label className="input_title">
                       {' '}Discount Amount: {tier.Amount}
                     </label>
                   </div>
